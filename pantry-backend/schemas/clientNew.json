@@ -1,0 +1,155 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "firstName",
+        "lastName",
+        "isEligible"
+    ],
+    "properties": {
+        "firstName": {
+            "type": "string",
+            "default": "",
+            "title": "The firstName Schema",
+            "examples": [
+                "First"
+            ]
+        },
+        "altFirstName": {
+            "type": "string",
+            "default": "",
+            "title": "The altFirstName Schema",
+            "examples": [
+                ""
+            ]
+        },
+        "lastName": {
+            "type": "string",
+            "default": "",
+            "title": "The lastName Schema",
+            "examples": [
+                "Last"
+            ]
+        },
+        "altLastName": {
+            "type": "string",
+            "default": "",
+            "title": "The altLastName Schema",
+            "examples": [
+                ""
+            ]
+        },
+        "address": {
+            "type": "string",
+            "default": "",
+            "title": "The address Schema",
+            "examples": [
+                "501 Cherry Lane Brooklyn, NY 11205"
+            ]
+        },
+        "phone": {
+            "type": "string",
+            "default": "",
+            "title": "The phone Schema",
+            "format": "000-000-0000",
+            "examples": [
+                "000-000-0000"
+            ]
+        },
+        "altPhone": {
+            "type": "string",
+            "default": "",
+            "title": "The altPhone Schema",
+            "format": "000-000-0000",
+            "examples": [
+                ""
+            ]
+        },
+        "numberAdultsInFamily": {
+            "type": "integer",
+            "default": 0,
+            "title": "The numberAdultsInFamily Schema",
+            "examples": [
+                2
+            ]
+        },
+        "numberKidsInFamily": {
+            "type": "integer",
+            "default": 0,
+            "title": "The numberKidsInFamily Schema",
+            "examples": [
+                3
+            ]
+        },
+        "ReceiveBenefits": {
+            "type": "string",
+            "default": "",
+            "title": "The ReceiveBenefits Schema",
+            "examples": [
+                "Yes"
+            ]
+        },
+        "isEligible": {
+            "type": "boolean",
+            "default": false,
+            "title": "The isEligible Schema",
+            "examples": [
+                true
+            ]
+        },
+        "race": {
+            "type": "string",
+            "default": "",
+            "title": "The race Schema",
+            "examples": [
+                "Caucasian"
+            ]
+        },
+        "isHispanic": {
+            "type": "string",
+            "default": "",
+            "title": "The isHispanic Schema",
+            "examples": [
+                "No"
+            ]
+        },
+        "createDate": {
+            "type": "string",
+            "default": "",
+            "format": "MM_DD_YY",
+            "title": "The createDate Schema",
+            "examples": [
+                "08-09-23"
+            ]
+        },
+        "lastVisit": {
+            "type": "string",
+            "default": "",
+            "format": "MM_DD_YY",
+            "title": "The lastVisit Schema",
+            "examples": [
+                "08-09-23"
+            ]
+        }
+    },
+    "examples": [{
+        "firstName": "First",
+        "altFirstName": "",
+        "lastName": "Last",
+        "altLastName": "",
+        "address": "501 Cherry Lane Brooklyn, NY 11205",
+        "phone": "000-000-0000",
+        "altPhone": "",
+        "numberAdultsInFamily": 2,
+        "numberKidsInFamily": 3,
+        "ReceiveBenefits": "Yes",
+        "isEligible": true,
+        "race": "Caucasian",
+        "isHispanic": "No",
+        "createDate": "08-09-23",
+        "lastVisit": "08-09-23"
+    }]
+}
