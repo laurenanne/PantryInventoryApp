@@ -1,5 +1,6 @@
 "use strict";
 
+const { NotFoundError } = require("../expressError");
 const db = require("../db");
 
 class OrderItems {
@@ -29,9 +30,9 @@ class OrderItems {
     const result = await db.query(querySql, [quantity, orderId, foodId]);
     let orderItem = result.rows[0];
 
-    if (!orderItem)
+    if (!orderItem) {
       throw new NotFoundError(`No such item from client order: ${orderId}`);
-
+    }
     return orderItem;
   }
 
@@ -40,7 +41,7 @@ class OrderItems {
     const result = await db.query(
       `DELETE FROM order_items 
       WHERE order_id =$1 AND food_id = $2
-        RETURNING purchase_id AS "purchaseId", food_id AS "foodId", quantity`,
+        RETURNING order_id AS "orderId", food_id AS "foodId", quantity`,
       [orderId, foodId]
     );
 

@@ -45,7 +45,7 @@ class Client {
     );
 
     const client = result.rows[0];
-    console.log(client);
+
     return client;
   }
 
@@ -113,10 +113,8 @@ class Client {
       query = query + " WHERE " + whereStatement.join(" AND ");
     }
 
-    console.log(query);
     query = query + " " + order;
 
-    console.log(query);
     const result = await db.query(query, queryVal);
 
     return result.rows;

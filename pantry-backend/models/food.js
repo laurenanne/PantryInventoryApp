@@ -1,6 +1,7 @@
 "use strict";
 
 const db = require("../db");
+const { NotFoundError } = require("../expressError");
 // const {
 //   NotFoundError,
 //   BadRequestError,
@@ -43,6 +44,7 @@ class Food {
     );
 
     let food = result.rows[0];
+    if (!food) throw new NotFoundError(`No food item: ${foodId}`);
     return food;
   }
 
@@ -55,6 +57,8 @@ class Food {
 
     const result = await db.query(querySql, [quantity, foodId]);
     let food = result.rows[0];
+
+    if (!food) throw new NotFoundError(`No food item: ${foodId}`);
 
     return food;
   }

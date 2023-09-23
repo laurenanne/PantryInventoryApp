@@ -15,6 +15,7 @@ class PurchaseItems {
     );
 
     let purchaseItem = result.rows[0];
+
     return purchaseItem;
   }
 
@@ -37,11 +38,13 @@ class PurchaseItems {
 
     const result = await db.query(querySql, [...values, purchaseId, foodId]);
     let purchaseItem = result.rows[0];
+    console.log(purchaseItem);
 
-    if (!purchaseItem)
+    if (!purchaseItem) {
       throw new NotFoundError(
         `No such item from purchase order: ${purchaseId}`
       );
+    }
 
     return purchaseItem;
   }

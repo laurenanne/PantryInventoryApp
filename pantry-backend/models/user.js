@@ -2,7 +2,7 @@
 
 const db = require("../db");
 const bcrypt = require("bcrypt");
-const { BadRequestError } = require("../expressError");
+const { BadRequestError, NotFoundError } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql.js");
 const { BCRYPT_WORK_FACTOR } = require("../config.js");
 
@@ -85,15 +85,21 @@ class User {
     );
 
     let user = result.rows[0];
+    if (!user) throw new NotFoundError(`No user: ${username}`);
 
     return user;
   }
 
-  // update user information (everything but username/passowrd)
+  // update user information (everything but username)
   static async update(username, data) {
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
+    }
+
     const { setCols, values } = sqlForPartialUpdate(data, {
       firstName: "first_name",
       lastName: "last_name",
+      password: "password",
       email: "email",
     });
     const handleVarIdx = "$" + (values.length + 1);
@@ -104,12 +110,14 @@ class User {
                     RETURNING username,         
                               first_name AS "firstName", 
                               last_name AS "lastName", 
-                              email`;
+                              email,
+                              is_admin AS "isAdmin"`;
     const result = await db.query(querySql, [...values, username]);
     const user = result.rows[0];
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
+    delete user.password;
     return user;
   }
 

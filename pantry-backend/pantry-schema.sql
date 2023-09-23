@@ -10,8 +10,8 @@ CREATE TABLE purchases(
 );
 
 CREATE TABLE purchase_items(
-    purchase_id SERIAL NOT NULL REFERENCES purchases,
-    food_id SERIAL NOT NULL REFERENCES food,
+    purchase_id SERIAL NOT NULL REFERENCES purchases ON DELETE CASCADE,
+    food_id SERIAL NOT NULL REFERENCES food ON DELETE CASCADE,
     PRIMARY KEY(purchase_id, food_id),
     quantity INTEGER NOT NULL,
     price_per_unit NUMERIC NOT NULL
@@ -39,14 +39,14 @@ CREATE TABLE clients(
 
 CREATE TABLE orders(
     order_id SERIAL PRIMARY KEY,
-    client_id SERIAL NOT NULL REFERENCES clients,
+    client_id SERIAL NOT NULL REFERENCES clients ON DELETE CASCADE,
     date DATE NOT NULL
 );
 
 
 CREATE TABLE order_items(
-    order_id SERIAL NOT NULL REFERENCES orders,
-    food_id SERIAL NOT NULL REFERENCES food,
+    order_id SERIAL NOT NULL REFERENCES orders ON DELETE CASCADE,
+    food_id SERIAL NOT NULL REFERENCES food ON DELETE CASCADE,
     PRIMARY KEY (order_id, food_id),
     quantity INTEGER NOT NULL  
 );

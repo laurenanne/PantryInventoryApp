@@ -30,7 +30,7 @@ class Purchase {
   }
 
   // get a purchase based on PurchaseId
-  static async get(purchaseId) {
+  static async get(id) {
     const result = await db.query(
       `SELECT p.purchase_id, p.date, f.food_id, f.name, pi.quantity, pi.price_per_unit
       FROM purchases AS p
@@ -38,34 +38,41 @@ class Purchase {
       ON p.purchase_id = pi.purchase_id
       LEFT JOIN food as f ON pi.food_id = f.food_id
         WHERE p.purchase_id = $1`,
-      [purchaseId]
+      [id]
     );
 
-    let { purchase_id, date } = result.rows[0];
+    if (!result.rows[0]) throw new NotFoundError(`No purchase: ${id}`);
+
+    let purchaseId = result.rows[0].purchase_id;
+    let date = result.rows[0].date;
+
     let food = result.rows.map((r) => {
       const container = {};
 
-      container.food_id = r.food_id;
+      container.foodId = r.food_id;
       container.name = r.name;
       container.quantity = r.quantity;
-      container.quantity = r.price_per_unit;
+      container.pricePerUnit = r.price_per_unit;
 
       return container;
     });
 
-    return { purchase_id, date, food };
+    return { purchaseId, date, food };
   }
 
   // updates the date on the Purchase order
-  static async update(purchaseId, date) {
+  static async update(id, date) {
     const querySql = `UPDATE purchases
     SET date = $1
     WHERE purchase_id = $2
-    RETURNING purchase_id AS "purchaseId, date`;
+    RETURNING purchase_id AS "purchaseId", date`;
 
-    const result = await db.query(querySql, [date, purchaseId]);
+    const result = await db.query(querySql, [date, id]);
+    let purchase = result.rows[0];
 
-    return { purchase_id, date, food };
+    if (!purchase) throw new NotFoundError(`No purchase order: ${id}`);
+
+    return purchase;
   }
 }
 

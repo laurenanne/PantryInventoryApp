@@ -14,24 +14,24 @@ const router = express.Router({ mergeParams: true });
 
 // Creates a new order. Must input clientId manually in the req.body
 // Authorization required: admin
-router.post("/", async function (req, res, next) {
-  try {
-    const order = await Order.create(req.body);
-    return res.status(201).json({ order });
-  } catch (err) {
-    return next(err);
-  }
-});
+// router.post("/", async function (req, res, next) {
+//   try {
+//     const order = await Order.create(req.body);
+//     return res.status(201).json({ order });
+//   } catch (err) {
+//     return next(err);
+//   }
+// });
 
 // Gets all orders
 // Can provide search filter in query: dateOrdered or clientId
 //  Authorization required: admin
-router.get("/", async function (req, res, next) {
+router.get("/", ensureAdmin, async function (req, res, next) {
   //   const q = req.query;
   //   if (q.datePurchased !== undefined) q.datePurhcased;
   try {
-    const order = await Order.getAll();
-    return res.json({ order });
+    const orders = await Order.getAll();
+    return res.json({ orders });
   } catch (err) {
     return next(err);
   }
@@ -39,7 +39,7 @@ router.get("/", async function (req, res, next) {
 
 // gets order based on orderId
 // Authorization required: Admin
-router.get("/:id", async function (req, res, next) {
+router.get("/:id", ensureAdmin, async function (req, res, next) {
   try {
     const order = await Order.get(req.params.id);
     return res.json({ order });
@@ -50,7 +50,7 @@ router.get("/:id", async function (req, res, next) {
 
 // deletes an order
 // Authorization required
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:id", ensureAdmin, async function (req, res, next) {
   try {
     await Order.remove(req.params.id);
     return res.json({ deleted: req.params.id });
@@ -61,14 +61,14 @@ router.delete("/:id", async function (req, res, next) {
 
 // handle adding orderItems to the order
 // Authorization required: Admin
-router.post("/:id/food/:foodId", async function (req, res, next) {
+router.post("/:id/food/:foodId", ensureAdmin, async function (req, res, next) {
   try {
     const orderItem = await OrderItems.addItems(
       req.params.id,
       req.params.foodId,
       req.body
     );
-    return res.json({ orderItem });
+    return res.status(201).json({ orderItem });
   } catch (err) {
     return next(err);
   }
@@ -76,14 +76,14 @@ router.post("/:id/food/:foodId", async function (req, res, next) {
 
 // handle updating orderItems in the client's order
 // Authorization required: Admin
-router.patch("/:id/food/:foodId", async function (req, res, next) {
+router.patch("/:id/food/:foodId", ensureAdmin, async function (req, res, next) {
   try {
-    const OrderItem = await OrderItems.editItems(
+    const orderItem = await OrderItems.editItems(
       req.params.id,
       req.params.foodId,
       req.body.quantity
     );
-    return res.json({ OrderItem });
+    return res.json({ orderItem });
   } catch (err) {
     return next(err);
   }
@@ -91,15 +91,19 @@ router.patch("/:id/food/:foodId", async function (req, res, next) {
 
 // handle deleting orderItems from the client order
 // Authorization required: Admin
-router.delete("/:id/food/:foodId", async function (req, res, next) {
-  try {
-    await OrderItems.deleteItems(req.params.id, req.params.foodId);
-    return res.json({
-      deleted: `Food Id ${req.params.foodId} from Client Order ${req.params.id}`,
-    });
-  } catch (err) {
-    return next(err);
+router.delete(
+  "/:id/food/:foodId",
+  ensureAdmin,
+  async function (req, res, next) {
+    try {
+      await OrderItems.deleteItems(req.params.id, req.params.foodId);
+      return res.json({
+        deleted: `Food Id ${req.params.foodId} from Client Order ${req.params.id}`,
+      });
+    } catch (err) {
+      return next(err);
+    }
   }
-});
+);
 
 module.exports = router;

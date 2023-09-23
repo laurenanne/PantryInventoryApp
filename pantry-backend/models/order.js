@@ -5,7 +5,6 @@ const moment = require("moment");
 const { NotFoundError } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
 let date = moment();
-console.log(date);
 let currentDate = date.format("YYYY-MM-DD");
 
 class Order {
@@ -36,7 +35,7 @@ class Order {
   }
 
   // get an order based on orderId
-  static async get(orderId) {
+  static async get(id) {
     const result = await db.query(
       `SELECT o.order_id, o.client_id, o.date, f.food_id, f.name, oi.quantity
       FROM orders AS o
@@ -44,23 +43,27 @@ class Order {
       ON o.order_id = oi.order_id
       LEFT JOIN food as f ON oi.food_id = f.food_id
         WHERE o.order_id = $1`,
-      [orderId]
+      [id]
     );
 
-    if (!result.rows[0]) throw new NotFoundError(`No order: ${orderId}`);
+    if (!result.rows[0]) throw new NotFoundError(`No order: ${id}`);
 
-    let { order_id, client_id, date } = result.rows[0];
+    // let { order_id, client_id, date } = result.rows[0];
+    let orderId = result.rows[0].order_id;
+    let clientId = result.rows[0].client_id;
+    let date = result.rows[0].date;
+
     let food = result.rows.map((r) => {
       const container = {};
 
-      container.food_id = r.food_id;
+      container.foodId = r.food_id;
       container.name = r.name;
       container.quantity = r.quantity;
 
       return container;
     });
 
-    return { order_id, client_id, date, food };
+    return { orderId, clientId, date, food };
   }
 
   // delete an order from the database
