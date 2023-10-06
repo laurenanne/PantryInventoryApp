@@ -74,6 +74,20 @@ class Purchase {
 
     return purchase;
   }
+
+  // delete a purchase from the database
+  static async remove(id) {
+    const result = await db.query(
+      `DELETE
+             FROM purchases
+             WHERE purchase_id = $1
+             RETURNING purchase_id AS purchaseId`,
+      [id]
+    );
+    const purchase = result.rows[0];
+
+    if (!purchase) throw new NotFoundError(`No purchase: ${id}`);
+  }
 }
 
 module.exports = Purchase;

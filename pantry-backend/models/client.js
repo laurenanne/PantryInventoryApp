@@ -157,7 +157,7 @@ class Client {
       [clientId]
     );
 
-    client.orders = clientOrders.rows.map((o) => o.orderId);
+    client.orders = clientOrders.rows;
     return client;
   }
 
@@ -191,7 +191,8 @@ class Client {
                               alt_last_name AS "altLastName", 
                               phone, 
                               alt_phone AS "altPhone", 
-                              address`;
+                              address
+                              `;
     const result = await db.query(querySql, [...values, clientId]);
     const client = result.rows[0];
 

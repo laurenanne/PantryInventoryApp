@@ -63,6 +63,17 @@ router.patch("/:id", ensureAdmin, async function (req, res, next) {
   }
 });
 
+//deletes a purchase order
+// Authorization required: admin
+router.delete("/:id", ensureAdmin, async function (req, res, next) {
+  try {
+    await Purchase.remove(req.params.id);
+    return res.json({ deleted: req.params.id });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 // handle adding purchaseItems to the purchase
 // Authorization required: Admin
 router.post("/:id/food/:foodId", ensureAdmin, async function (req, res, next) {
@@ -98,6 +109,7 @@ router.patch("/:id/food/:foodId", ensureAdmin, async function (req, res, next) {
 router.delete(
   "/:id/food/:foodId",
   ensureAdmin,
+
   async function (req, res, next) {
     try {
       await PurchaseItems.deleteItems(req.params.id, req.params.foodId);

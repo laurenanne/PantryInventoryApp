@@ -49,13 +49,13 @@ class Food {
   }
 
   // updates the inventory of each food item
-  static async updateInventory(foodId, quantity) {
+  static async updateInventory(foodId, inventory) {
     const querySql = `UPDATE food 
       SET inventory = inventory + $1
       WHERE food_id = $2
       RETURNING food_id AS "foodId", name, inventory`;
 
-    const result = await db.query(querySql, [quantity, foodId]);
+    const result = await db.query(querySql, [inventory, foodId]);
     let food = result.rows[0];
 
     if (!food) throw new NotFoundError(`No food item: ${foodId}`);

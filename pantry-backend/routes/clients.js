@@ -78,6 +78,7 @@ router.post("/:id/orders", ensureAdmin, async function (req, res, next) {
 router.get(
   "/:id/orders/:orderId",
   ensureAdmin,
+
   async function (req, res, next) {
     try {
       const order = await Order.get(req.params.orderId);
