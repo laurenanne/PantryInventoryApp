@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import PantryApi from "../pantryApi";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -41,8 +41,12 @@ function ClientCard({ client }) {
 
   async function deleteClient(evt) {
     evt.preventDefault();
-    await PantryApi.removeClient(client.clientId);
-    history.push("/clients");
+    try {
+      await PantryApi.removeClient(client.clientId);
+      history.push("/clients");
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   console.log(client);
