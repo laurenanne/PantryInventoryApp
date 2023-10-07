@@ -5,8 +5,10 @@ import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import "./orders.css";
-import MenuItem from "@mui/material/MenuItem";
 import Grid from "@mui/material/Grid";
+import { Formik, Form, ErrorMessage } from "formik";
+import * as yup from "yup";
+import { Typography } from "@mui/material";
 
 function NewOrderItemForm({
   foodId,
@@ -17,7 +19,6 @@ function NewOrderItemForm({
   setTotal,
   updateInv,
 }) {
-  //   const history = useHistory();
   const [disabled, setDisabled] = useState(false);
   const [checked, setChecked] = useState(false);
   const [checkDisabled, setCheckDisabled] = useState(false);
@@ -27,63 +28,69 @@ function NewOrderItemForm({
     setChecked(event.target.checked);
   };
 
-  const [quantity, setQuantity] = useState("");
   const [formErrors, setFormErrors] = useState(null);
 
-  //   }
+  const initialValue = {
+    quantity: "",
+  };
 
-  async function addItem(event) {
-    event.preventDefault();
-    const quantNum = parseInt(quantity);
+  const orderValidation = yup.object().shape({
+    quantity: yup
+      .number()
+      .max(12 - total, "Limit of 12 items")
+      .test("Limit of 2", (quantity) => quantity <= 2)
+      .test("Inventory Low", (quantity) => quantity <= inventory),
+  });
 
-    if (total + quantNum > 12) {
-      console.log("ERROR");
-      setQuantity(0);
+  function handleSubmit(values, props) {
+    console.log("HERRRRRRE");
+    !isAdded ? addItem(values, props) : removeOrderItem(values, props);
+  }
 
-      return total;
-    }
+  async function addItem(values, props) {
+    const quantNum = parseInt(values.quantity);
 
-    if (quantNum > inventory) {
-      console.log("ERROR");
-      setQuantity(0);
-      setDisabled(true);
-      setCheckDisabled(true);
-    } else {
-      let orderItem = await PantryApi.addOrderItems(orderId, foodId, {
-        quantity: quantity,
+    try {
+      await PantryApi.addOrderItems(orderId, foodId, {
+        quantity: values.quantity,
       });
-      if (orderItem) {
-        setIsAdded(true);
-        setCheckDisabled(true);
-        setTotal(total + quantNum);
+      setIsAdded(true);
+      setCheckDisabled(true);
+      setTotal(total + quantNum);
 
-        let update = await updateInv(foodId, -Math.abs(quantNum));
-      } else {
-        setFormErrors(orderItem.err);
+      try {
+        await updateInv(foodId, -Math.abs(quantNum));
+      } catch (err) {
+        setFormErrors(err);
       }
+    } catch (err) {
+      setFormErrors(err);
     }
   }
 
-  async function removeOrderItem(event) {
-    event.preventDefault();
-    const quantNum = parseInt(quantity);
-    let res = await PantryApi.removeOrderItem(orderId, foodId);
+  async function removeOrderItem(values, props) {
+    const quantNum = parseInt(values.quantity);
 
-    if (res) {
+    try {
+      await PantryApi.removeOrderItem(orderId, foodId);
       setIsAdded(false);
       setCheckDisabled(false);
-      setQuantity("");
+      props.resetForm();
       setTotal(total - quantNum);
 
-      let update = await updateInv(foodId, quantNum);
-    } else {
-      //   setFormErrors(orderItem.err);
+      try {
+        await updateInv(foodId, quantNum);
+      } catch (err) {
+        setFormErrors(err);
+      }
+    } catch (err) {
+      setFormErrors(err);
     }
   }
 
-  const handleChange = (evt) => {
-    setQuantity(evt.target.value);
-  };
+  // const handleChange = (evt) => {
+  //   setQuantity(evt.target.value);
+  // };
 
   //   async function addItem(event) {
   //     event.preventDefault();
@@ -110,72 +117,82 @@ function NewOrderItemForm({
 
   return (
     <React.Fragment>
-      {/* <Box
-        sx={{
-          marginTop: 2,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+      <Formik
+        initialValues={initialValue}
+        validationSchema={orderValidation}
+        onSubmit={handleSubmit}
+      >
+        {(props) => {
+          const { quantity } = props.values;
+          return (
+            <Form>
+              <Grid container spacing={3} sx={{ mb: 3 }}>
+                <Grid item xs={!checked ? 12 : 5}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={checked}
+                        disabled={checkDisabled}
+                        name={name}
+                        onChange={handleCheckChange}
+                      />
+                    }
+                    label={name}
+                  />
+                </Grid>
+
+                <Grid item xs={3}>
+                  {checked ? (
+                    <TextField
+                      name="quantity"
+                      disabled={disabled}
+                      label="#"
+                      autoFocus
+                      id="quantity"
+                      type="integer"
+                      value={quantity}
+                      onChange={props.handleChange}
+                      onBlur={props.handleBlur}
+                      helperText={<ErrorMessage name="quantity" />}
+                      error={props.errors.quantity && props.touched.quantity}
+                    />
+                  ) : (
+                    ""
+                  )}
+                </Grid>
+
+                <Grid item xs={4}>
+                  {checked && !isAdded ? (
+                    <Button type="submit" size="small">
+                      Add to Cart
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+
+                  {isAdded ? (
+                    <Button type="submit" size="small">
+                      <span className="material-symbols-outlined">delete</span>
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                </Grid>
+
+                <Grid item xs={12} sx={{ textAlign: "center", color: "red" }}>
+                  {formErrors ? (
+                    <span>
+                      <Typography>{formErrors}</Typography>
+                    </span>
+                  ) : (
+                    <span></span>
+                  )}
+                </Grid>
+              </Grid>
+            </Form>
+          );
         }}
-      > */}
-
-      {/* <FormGroup aria-label="position" row> */}
-      <Grid container spacing={3} sx={{ mb: 3 }}>
-        {/* sx={{ display: "flex", flexDirection: "row" }} */}
-        <Grid item xs={!checked ? 12 : 5}>
-          <FormControlLabel
-            //   className="label-style"
-            control={
-              <Checkbox
-                checked={checked}
-                disabled={checkDisabled}
-                // id={foodId}
-                name={name}
-                onChange={handleCheckChange}
-              />
-            }
-            label={name}
-          />
-        </Grid>
-        <Grid item xs={3}>
-          {/* sx={{ mt: 0 }} */}
-          {checked ? (
-            <TextField
-              //   id=`{foodId}`
-              name={name}
-              disabled={disabled}
-              label="#"
-              onChange={handleChange}
-              autoFocus
-              value={quantity}
-            >
-              <MenuItem value={1}>1</MenuItem>
-              <MenuItem value={2}>2</MenuItem>
-            </TextField>
-          ) : (
-            ""
-          )}
-        </Grid>
-        <Grid item xs={4}>
-          {checked && !isAdded ? (
-            <Button size="small" onClick={addItem}>
-              Add to Cart
-            </Button>
-          ) : (
-            ""
-          )}
-          {isAdded ? (
-            <Button size="small" onClick={removeOrderItem}>
-              <span className="material-symbols-outlined">delete</span>
-            </Button>
-          ) : (
-            ""
-          )}
-        </Grid>
-      </Grid>
-      {/* </FormGroup> */}
-
-      {/* </Box> */}
+      </Formik>
     </React.Fragment>
   );
 }

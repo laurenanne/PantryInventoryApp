@@ -6,82 +6,78 @@ import PantryApi from "../pantryApi";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Formik, Form, ErrorMessage } from "formik";
+import * as yup from "yup";
+import Grid from "@mui/material/Grid";
 
-function NewPurchaseItemForm({
-  foodId,
-  name,
-  purchaseId,
-  inventory,
-  updateInv,
-}) {
-  const initialState = {
+function NewPurchaseItemForm({ foodId, name, purchaseId, updateInv }) {
+  const [formErrors, setFormErrors] = useState(null);
+  const [disabled, setDisabled] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
+
+  const initialValue = {
     quantity: 0,
     pricePerUnit: 0,
   };
 
   const pantryTheme = createTheme();
 
-  const [items, setItems] = useState(initialState);
-  const [formErrors, setFormErrors] = useState(null);
-  const [disabled, setDisabled] = useState(false);
-  const [isAdded, setIsAdded] = useState(false);
+  const purchaseValidation = yup.object().shape({
+    quantity: yup.number(),
+    pricePerUnit: yup.number().positive(),
+  });
 
-  async function addItem(event) {
-    event.preventDefault();
-    let quantNum = parseInt(items.quantity);
+  function handleSubmit(values, props) {
+    console.log("here");
+    !isAdded ? addItem(values, props) : removeItem(values, props);
+  }
 
-    let purchaseItem = await PantryApi.addPurchaseItems(
-      purchaseId,
-      foodId,
-      items
-    );
+  async function addItem(values, props) {
+    let quantNum = parseInt(values.quantity);
 
-    if (purchaseItem) {
+    try {
+      await PantryApi.addPurchaseItems(purchaseId, foodId, values);
       setDisabled(true);
       setIsAdded(true);
-      let update = await updateInv(foodId, quantNum);
-    } else {
-      setFormErrors(purchaseItem.err);
+
+      try {
+        await updateInv(foodId, quantNum);
+      } catch (err) {
+        setFormErrors(err);
+      }
+    } catch (err) {
+      setFormErrors(err);
     }
   }
 
-  async function removeItem(event) {
-    event.preventDefault();
-
-    const quantNum = parseInt(items.quantity);
-    console.log(quantNum);
-    let res = await PantryApi.removePurchaseItem(purchaseId, foodId);
-
-    if (res) {
+  async function removeItem(values, props) {
+    const quantNum = parseInt(values.quantity);
+    try {
+      await PantryApi.removePurchaseItem(purchaseId, foodId);
       setIsAdded(false);
       setDisabled(false);
-      setItems(initialState);
+      props.resetForm();
 
-      let update = await updateInv(foodId, -Math.abs(quantNum));
-    } else {
-      // setFormErrors(orderItem.err);
+      try {
+        await updateInv(foodId, -Math.abs(quantNum));
+      } catch (err) {
+        setFormErrors(err);
+      }
+    } catch (err) {
+      setFormErrors(err);
     }
   }
-
-  const handleChange = (evt) => {
-    const { name, value } = evt.target;
-    setItems((data) => ({
-      ...data,
-      [name]: value,
-    }));
-  };
 
   return (
     <React.Fragment>
       <Box
         sx={{
-          marginTop: 2,
+          marginTop: 5,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        {/* <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}> */}
         <Box
           sx={{
             border: 1,
@@ -92,57 +88,69 @@ function NewPurchaseItemForm({
             {name}
           </Typography>
         </Box>
-        <Box
-          component="form"
-          noValidate
-          sx={{ mt: 1 }}
-          id={foodId}
-          className="purchaseItem"
+
+        <Formik
+          initialValues={initialValue}
+          validationSchema={purchaseValidation}
+          onSubmit={handleSubmit}
         >
-          <TextField
-            disabled={disabled}
-            label="Quantity"
-            id="quantity"
-            fullWidth
-            name="quantity"
-            onChange={handleChange}
-            value={items.quantity}
-          />
+          {(props) => {
+            const { quantity, pricePerUnit } = props.values;
+            return (
+              <Form>
+                <TextField
+                  margin="normal"
+                  disabled={disabled}
+                  label="Quantity"
+                  id="quantity"
+                  fullWidth
+                  name="quantity"
+                  onChange={props.handleChange}
+                  onBlur={props.handleBlur}
+                  value={quantity}
+                  helperText={<ErrorMessage name="quantity" />}
+                  error={props.errors.quantity && props.touched.quantity}
+                />
 
-          <TextField
-            disabled={disabled}
-            label="Price Per Unit"
-            id="pricePerUnit"
-            fullWidth
-            name="pricePerUnit"
-            onChange={handleChange}
-            value={items.pricePerUnit}
-          />
+                <TextField
+                  margin="normal"
+                  disabled={disabled}
+                  label="Price Per Unit"
+                  id="pricePerUnit"
+                  fullWidth
+                  name="pricePerUnit"
+                  onChange={props.handleChange}
+                  onBlur={props.handleBlur}
+                  value={pricePerUnit}
+                  helperText={<ErrorMessage name="pricePerUnit" />}
+                  error={
+                    props.errors.pricePerUnit && props.touched.pricePerUnit
+                  }
+                />
 
-          {!isAdded ? (
-            <Button
-              size="small"
-              onClick={addItem}
-              // disabled={disabled}
-              type="submit"
-              variant="outlined"
-              sx={{ ml: 2 }}
-            >
-              Add
-            </Button>
-          ) : (
-            <Button
-              size="small"
-              onClick={removeItem}
-              // disabled={disabled}
-              type="submit"
-              variant="outlined"
-              sx={{ ml: 2 }}
-            >
-              Remove
-            </Button>
-          )}
-        </Box>
+                {!isAdded ? (
+                  <Button
+                    size="small"
+                    fullWidth
+                    type="submit"
+                    variant="outlined"
+                  >
+                    Add
+                  </Button>
+                ) : (
+                  <Button
+                    size="small"
+                    fullWidth
+                    type="submit"
+                    variant="outlined"
+                  >
+                    Remove
+                  </Button>
+                )}
+              </Form>
+            );
+          }}
+        </Formik>
       </Box>
     </React.Fragment>
   );

@@ -38,13 +38,14 @@ function NewOrderForm(props) {
   const history = useHistory();
   const pantryTheme = createTheme();
 
+  const [formErrors, setFormErrors] = useState(null);
+
   async function handleSubmit(event) {
     event.preventDefault();
     if (total > 12) {
       setDisabled(true);
-      console.log("MESSAGE");
+      setFormErrors("Can't select more than 12 items!");
     } else {
-      console.log("I'M HERE");
       history.push(`/clients/${clientId}`);
     }
   }
@@ -78,7 +79,7 @@ function NewOrderForm(props) {
             noted.
           </Typography>
 
-          <Box component="form" noValidate sx={{ mt: 1 }}>
+          <Box noValidate sx={{ mt: 1 }}>
             {food.map((f) => (
               <NewOrderItemForm
                 key={f.foodId}
@@ -112,6 +113,15 @@ function NewOrderForm(props) {
             >
               Submit
             </Button>
+            {formErrors ? (
+              <div>
+                {formErrors.map((e) => (
+                  <p className="mb-0">{e}</p>
+                ))}
+              </div>
+            ) : (
+              <div></div>
+            )}
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />

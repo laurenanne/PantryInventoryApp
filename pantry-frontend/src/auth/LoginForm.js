@@ -3,64 +3,61 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
+// import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
+import { Formik, Form, ErrorMessage } from "formik";
+import * as yup from "yup";
+import { Link } from "react-router-dom";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Pantry
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+// function Copyright(props) {
+//   return (
+//     <Typography
+//       variant="body2"
+//       color="text.secondary"
+//       align="center"
+//       {...props}
+//     >
+//       {"Copyright © "}
+//       <Link color="inherit" href="https://mui.com/">
+//         Pantry
+//       </Link>{" "}
+//       {new Date().getFullYear()}
+//       {"."}
+//     </Typography>
+//   );
+// }
 
 const pantryTheme = createTheme();
 
 function LoginForm({ login }) {
-  const initialState = {
+  const initialValue = {
     username: "",
     password: "",
   };
 
-  const [formData, setFormData] = useState(initialState);
-  const [formErrors, setFormErrors] = useState([]);
+  const loginValidation = yup.object().shape({
+    username: yup.string().required("Username is required"),
+    password: yup.string().required("Enter Your Password"),
+  });
+
+  const [formErrors, setFormErrors] = useState(null);
+  console.log(formErrors);
   const history = useHistory();
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-    let result = await login(formData);
-    if (result.success) {
-      history.push("/food");
+  async function handleSubmit(values, props) {
+    let resp = await login(values);
+    if (resp.success) {
+      props.resetForm();
+      history.push("/home");
     } else {
-      setFormErrors(result.err);
+      setFormErrors("Incorrect username/password");
     }
   }
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((data) => ({
-      ...data,
-      [name]: value,
-    }));
-  };
 
   return (
     <ThemeProvider theme={pantryTheme}>
@@ -72,8 +69,7 @@ function LoginForm({ login }) {
           sm={4}
           md={7}
           sx={{
-            backgroundImage:
-              "url(https://source.unsplash.com/random?wallpapers)",
+            backgroundImage: "url(./greenBeans.jpg)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -99,57 +95,82 @@ function LoginForm({ login }) {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box
-              component="form"
-              noValidate
-              onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
-            >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                name="username"
-                onChange={handleChange}
-                autoFocus
-                autoComplete="username"
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                onChange={handleChange}
-                id="password"
-                autoComplete="current-password"
-              />
 
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign In
-              </Button>
-              <Grid container>
-                {/* <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid> */}
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Request an account"}
-                  </Link>
-                </Grid>
-              </Grid>
-              <Copyright sx={{ mt: 5 }} />
-            </Box>
+            <Formik
+              initialValues={initialValue}
+              validationSchema={loginValidation}
+              onSubmit={handleSubmit}
+            >
+              {(props) => {
+                const { username, password } = props.values;
+                return (
+                  <Form>
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="username"
+                      label="Username"
+                      name="username"
+                      value={username}
+                      onChange={props.handleChange}
+                      onBlur={props.handleBlur}
+                      autoFocus
+                      helperText={<ErrorMessage name="username" />}
+                      error={props.errors.username && props.touched.username}
+                      autoComplete="username"
+                    />
+                    <TextField
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="password"
+                      name="password"
+                      value={password}
+                      onChange={props.handleChange}
+                      onBlur={props.handleBlur}
+                      label="Password"
+                      type="password"
+                      helperText={<ErrorMessage name="password" />}
+                      error={props.errors.password && props.touched.password}
+                      autoComplete="current-password"
+                    />
+
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2 }}
+                    >
+                      Sign In
+                    </Button>
+
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{ textAlign: "center", color: "red" }}
+                    >
+                      {formErrors ? (
+                        <span>
+                          <Typography>{formErrors}</Typography>
+                        </span>
+                      ) : (
+                        <span></span>
+                      )}
+                    </Grid>
+
+                    <Grid container>
+                      <Grid item>
+                        <Link to="/signup" variant="body2">
+                          {"Request an account"}
+                        </Link>
+                      </Grid>
+                    </Grid>
+                    {/* <Copyright sx={{ mt: 5 }} /> */}
+                  </Form>
+                );
+              }}
+            </Formik>
           </Box>
         </Grid>
       </Grid>

@@ -9,7 +9,9 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
-import PantryApi from "../pantryApi";
+import { Formik, Form, ErrorMessage } from "formik";
+import * as yup from "yup";
+import Grid from "@mui/material/Grid";
 
 function Copyright(props) {
   return (
@@ -32,43 +34,48 @@ function Copyright(props) {
 const pantryTheme = createTheme();
 
 function NewFoodForm({ addNewFood }) {
-  const initialState = {
+  const initialValue = {
     name: "",
     inventory: "",
   };
 
-  const [formData, setFormData] = useState(initialState);
-  const [formErrors, setFormErrors] = useState([]);
+  const foodValidation = yup.object().shape({
+    name: yup.string("Enter a valid name").required("Name is required"),
+    inventory: yup.number("Enter an inventory amount"),
+  });
+
   const history = useHistory();
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-    let food = await addNewFood({
-      name: formData.name,
-      inventory: parseInt(formData.inventory),
+  const [formErrors, setFormErrors] = useState(null);
+
+  async function handleSubmit(values, props) {
+    let resp = await addNewFood({
+      name: values.name,
+      inventory: parseInt(values.inventory),
     });
 
-    if (food) {
-      history.push("/home");
+    if (resp.success) {
+      props.resetForm();
+      history.push("/food");
     } else {
-      setFormErrors(food.err);
+      setFormErrors(resp.err);
     }
   }
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((data) => ({
-      ...data,
-      [name]: value,
-    }));
-  };
+  // const handleChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setFormData((data) => ({
+  //     ...data,
+  //     [name]: value,
+  //   }));
+  // };
 
-  //   function isError(formErrors) {
-  //     if (!formErrors) return null;
-  //     else {
-  //       return formErrors.map((e) => ({ e }));
-  //     }
+  // function isError(errors) {
+  //   if (!formErrors) return null;
+  //   else {
+  //     return formErrors.map((e) => ({ e }));
   //   }
+  // }
 
   return (
     <ThemeProvider theme={pantryTheme}>
@@ -88,46 +95,77 @@ function NewFoodForm({ addNewFood }) {
           <Typography component="h1" variant="h5">
             Add a New Food
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="Name"
-              name="name"
-              onChange={handleChange}
-              value={formData.name}
-              autoComplete="name"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="inventory"
-              label="Inventory"
-              type="number"
-              id="inventory"
-              onChange={handleChange}
-              value={formData.inventory}
-              autoComplete="inventory"
-            />
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Add
-            </Button>
-          </Box>
+          <Formik
+            initialValues={initialValue}
+            validationSchema={foodValidation}
+            onSubmit={handleSubmit}
+          >
+            {(props) => {
+              const { name, inventory } = props.values;
+              return (
+                <Form>
+                  <TextField
+                    label="Name"
+                    name="name"
+                    fullWidth
+                    variant="outlined"
+                    margin="dense"
+                    value={name}
+                    onChange={props.handleChange}
+                    onBlur={props.handleBlur}
+                    helperText={<ErrorMessage name="name" />}
+                    error={props.errors.name && props.touched.name}
+                    required
+                  />
+                  <TextField
+                    label="Inventory"
+                    name="inventory"
+                    fullWidth
+                    variant="outlined"
+                    margin="dense"
+                    value={inventory}
+                    onChange={props.handleChange}
+                    onBlur={props.handleBlur}
+                    helperText={<ErrorMessage name="inventory" />}
+                    error={props.errors.inventory && props.touched.inventory}
+                    required
+                  />
+
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    fullWidth
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Submit
+                  </Button>
+
+                  <Grid item xs={12} sx={{ textAlign: "center", color: "red" }}>
+                    {formErrors ? (
+                      <span>
+                        {formErrors.map((e) => (
+                          <p className="mb-0">{e}</p>
+                        ))}
+                      </span>
+                    ) : (
+                      <span></span>
+                    )}
+                  </Grid>
+                </Form>
+              );
+              //   <Button
+              //     type="submit"
+              //     fullWidth
+              //     variant="contained"
+              //     sx={{ mt: 3, mb: 2 }}
+              //   >
+              //     Add
+              //   </Button>
+              // </Form>
+              // );
+            }}
+          </Formik>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>

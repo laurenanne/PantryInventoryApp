@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import UserContext from "./auth/UserContext";
-import Nav from "./routes-nav/Nav";
+import NavBar from "./routes-nav/NavBar";
 import Routes from "./routes-nav/Routes";
 import PantryApi from "./pantryApi";
 import "./App.css";
@@ -53,9 +53,9 @@ function App() {
     try {
       let food = await PantryApi.addFood(data);
       setNewFood(food);
-      return food;
+      return { success: true };
     } catch (err) {
-      return err;
+      return { success: false, err };
     }
   }
 
@@ -95,7 +95,7 @@ function App() {
     <BrowserRouter>
       <UserContext.Provider value={{ currentUser }}>
         <div className="App">
-          {currentUser ? <Nav logout={logout} /> : ""}
+          {currentUser ? <NavBar logout={logout} /> : ""}
           <Routes
             updateInv={updateInv}
             food={food}

@@ -29,9 +29,9 @@ function Routes({ login, signup, food, updateInv, addNewFood }) {
           <Dashboard food={food} />
         </ProtectedRoute>
 
-        <ProtectedRoute exact path="/signup">
+        <Route exact path="/signup">
           <SignupForm signup={signup} />
-        </ProtectedRoute>
+        </Route>
 
         <ProtectedRoute exact path="/food">
           <FoodList food={food} />
@@ -57,9 +57,9 @@ function Routes({ login, signup, food, updateInv, addNewFood }) {
           <EditClientForm />
         </ProtectedRoute>
 
-        <Route exact path="/clients/:clientId/orders/:orderId/new">
+        <ProtectedRoute exact path="/clients/:clientId/orders/:orderId/new">
           <NewOrderForm updateInv={updateInv} food={food} />
-        </Route>
+        </ProtectedRoute>
 
         <ProtectedRoute exact path="/orders">
           <OrderList />

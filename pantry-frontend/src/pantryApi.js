@@ -142,63 +142,62 @@ class PantryApi {
 
   // ***********************DELETE******************************
   static async removeUser(username) {
-    let res = await axios({
-      url: `http://localhost:3001/users/${username}`,
-      method: "delete",
-      header: { Authorization: `Bearer ${PantryApi.token}` },
-    });
+    let res = await this.request(
+      `users/${username}`,
+      { Authorization: `Bearer ${PantryApi.token}` },
+      "delete"
+    );
 
     return res.body;
   }
 
   static async removeOrder(orderId) {
-    let res = await axios({
-      url: `http://localhost:3001/orders/${orderId}`,
-      method: "delete",
-      header: { Authorization: `Bearer ${PantryApi.token}` },
-    });
+    let res = await this.request(
+      `orders/${orderId}`,
+      { Authorization: `Bearer ${PantryApi.token}` },
+      "delete"
+    );
 
     return res.body;
   }
 
   static async removePurchase(purchaseId) {
-    let res = await axios({
-      url: `http://localhost:3001/purchases/${purchaseId}`,
-      method: "delete",
-      header: { Authorization: `Bearer ${PantryApi.token}` },
-    });
+    let res = await this.request(
+      `purchases/${purchaseId}`,
+      { Authorization: `Bearer ${PantryApi.token}` },
+      "delete"
+    );
 
     return res.body;
   }
 
   static async removeClient(clientId) {
-    let res = await axios({
-      url: `http://localhost:3001/clients/${clientId}`,
-      method: "delete",
-      header: { Authorization: `Bearer ${PantryApi.token}` },
-    });
-
+    let res = await this.request(
+      `clients/${clientId}`,
+      { Authorization: `Bearer ${PantryApi.token}` },
+      "delete"
+    );
     return res.body;
   }
 
   static async removeOrderItem(orderId, foodId) {
-    let res = await axios({
-      url: `http://localhost:3001/orders/${orderId}/food/${foodId}`,
-      method: "delete",
-      header: { Authorization: `Bearer ${PantryApi.token}` },
-    });
+    let res = await this.request(
+      `orders/${orderId}/food/${foodId}`,
+      { Authorization: `Bearer ${PantryApi.token}` },
+      "delete"
+    );
 
     return res.data;
   }
 
   static async removePurchaseItem(purchaseId, foodId) {
-    let res = await axios({
-      url: `http://localhost:3001/purchases/${purchaseId}/food/${foodId}`,
-      method: "delete",
-      header: { Authorization: `Bearer ${PantryApi.token}` },
-    });
+    let res = await this.request(
+      `purchases/${purchaseId}/food/${foodId}`,
+      { Authorization: `Bearer ${PantryApi.token}` },
+      "delete"
+    );
 
-    return res.data;
+    return res;
   }
 }
 

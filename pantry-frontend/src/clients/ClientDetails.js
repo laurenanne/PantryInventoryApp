@@ -34,17 +34,16 @@ function ClientDetail() {
     getClient();
   }, [clientId]);
 
-  console.log(client);
   async function newOrder() {
     let order = await PantryApi.addOrder(clientId);
     if (order) {
-      await PantryApi.editClient(clientId, {
+      let update = await PantryApi.editClient(clientId, {
         lastVisit: currDate,
       });
 
-      history.push(`/clients/${clientId}/orders/${order.orderId}/new`);
-    } else {
-      // error handling
+      if (update) {
+        history.push(`/clients/${clientId}/orders/${order.orderId}/new`);
+      }
     }
   }
 
