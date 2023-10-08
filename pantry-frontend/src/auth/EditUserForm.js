@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -10,37 +9,35 @@ import Container from "@mui/material/Container";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as yup from "yup";
+import UserContext from "../auth/UserContext";
 
-function SignupForm({ signup }) {
+function EditUserForm({ editUser }) {
+  const { currentUser } = useContext(UserContext);
+
   const initialValue = {
-    username: "",
     password: "",
-    firstName: "",
-    lastName: "",
-    email: "",
+    firstName: currentUser.firstName,
+    lastName: currentUser.lastName,
+    email: currentUser.email,
   };
 
   const [formErrors, setFormErrors] = useState([]);
   const history = useHistory();
 
-  const signupValidation = yup.object().shape({
-    username: yup.string().required("Username is required"),
-    password: yup.string().required("Enter Your Password"),
-    firstName: yup.string().required("Enter Your First Name"),
-    lastName: yup.string().required("Enter Your Last Name"),
-    email: yup
-      .string()
-      .email("Invalid email format")
-      .required("Enter Your Email"),
+  const editValidation = yup.object().shape({
+    password: yup.string(),
+    firstName: yup.string(),
+    lastName: yup.string(),
+    email: yup.string().email("Invalid email format"),
   });
 
   async function handleSubmit(values, props) {
-    let resp = await signup(values);
-    if (resp.success) {
+    let res = await editUser(currentUser.username, values);
+    if (res.success) {
       props.resetForm();
       history.push("/home");
     } else {
-      setFormErrors(resp.err);
+      setFormErrors(res.err);
     }
   }
 
@@ -58,22 +55,16 @@ function SignupForm({ signup }) {
           <span className="material-symbols-outlined">login</span>
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Edit User Profile
         </Typography>
 
         <Formik
           initialValues={initialValue}
-          validationSchema={signupValidation}
+          validationSchema={editValidation}
           onSubmit={handleSubmit}
         >
           {(props) => {
-            const {
-              username,
-              password,
-              firstName,
-              lastName,
-              email,
-            } = props.values;
+            const { password, firstName, lastName, email } = props.values;
             return (
               <Form>
                 <Grid container sx={{ mt: 2 }} spacing={2}>
@@ -128,16 +119,12 @@ function SignupForm({ signup }) {
                     <TextField
                       required
                       fullWidth
+                      disabled
                       name="username"
                       label="Username"
                       type="username"
                       id="username"
-                      value={username}
-                      onChange={props.handleChange}
-                      onBlur={props.handleBlur}
-                      helperText={<ErrorMessage name="username" />}
-                      error={props.errors.username && props.touched.username}
-                      autoComplete="username"
+                      value={currentUser.username}
                     />
                   </Grid>
 
@@ -164,7 +151,7 @@ function SignupForm({ signup }) {
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  Sign Up
+                  Submit
                 </Button>
 
                 {formErrors ? (
@@ -176,19 +163,6 @@ function SignupForm({ signup }) {
                 ) : (
                   <div></div>
                 )}
-
-                <Grid container justifyContent="center">
-                  <Grid item>
-                    <Link
-                      href="/"
-                      fontSize="1rem"
-                      color="secondary.dark"
-                      variant="body2"
-                    >
-                      Already have an account? Sign in
-                    </Link>
-                  </Grid>
-                </Grid>
               </Form>
             );
           }}
@@ -198,4 +172,4 @@ function SignupForm({ signup }) {
   );
 }
 
-export default SignupForm;
+export default EditUserForm;

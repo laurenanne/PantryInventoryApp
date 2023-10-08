@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import PantryApi from "../pantryApi";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -49,7 +49,6 @@ function ClientCard({ client }) {
     }
   }
 
-  console.log(client);
   if (!client) {
     return (
       <div>
@@ -60,10 +59,26 @@ function ClientCard({ client }) {
     return (
       <React.Fragment>
         <Box sx={{ mr: 3, ml: 3, mt: 3 }}>
-          <Card sx={{ backgroundColor: "grey" }} variant="outlined">
+          <Card
+            variant="outlined"
+            sx={{
+              boxShadow: 4,
+              borderBottomColor: "secondary.main",
+              bgcolor: "#fff",
+              borderRadius: 2,
+            }}
+          >
             <CardHeader
+              subheaderTypographyProps={{
+                gutterBottom: true,
+                color: "secondary.dark",
+              }}
+              sx={{ color: "secondary.dark" }}
               avatar={
-                <Avatar sx={{ bgcolor: "green" }} aria-label="lastName">
+                <Avatar
+                  sx={{ m: 1, bgcolor: "secondary.main" }}
+                  aria-label="lastName"
+                >
                   {client.lastName[0]}
                 </Avatar>
               }

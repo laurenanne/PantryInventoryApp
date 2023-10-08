@@ -1,37 +1,14 @@
 import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as yup from "yup";
 import Grid from "@mui/material/Grid";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Pantry
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
-const pantryTheme = createTheme();
 
 function NewFoodForm({ addNewFood }) {
   const initialValue = {
@@ -62,114 +39,85 @@ function NewFoodForm({ addNewFood }) {
     }
   }
 
-  // const handleChange = (event) => {
-  //   const { name, value } = event.target;
-  //   setFormData((data) => ({
-  //     ...data,
-  //     [name]: value,
-  //   }));
-  // };
-
-  // function isError(errors) {
-  //   if (!formErrors) return null;
-  //   else {
-  //     return formErrors.map((e) => ({ e }));
-  //   }
-  // }
-
   return (
-    <ThemeProvider theme={pantryTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <span className="material-symbols-outlined">nutrition</span>
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Add a New Food
+        </Typography>
+
+        <Formik
+          initialValues={initialValue}
+          validationSchema={foodValidation}
+          onSubmit={handleSubmit}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <span className="material-symbols-outlined">nutrition</span>
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Add a New Food
-          </Typography>
+          {(props) => {
+            const { name, inventory } = props.values;
+            return (
+              <Form>
+                <TextField
+                  label="Name"
+                  name="name"
+                  fullWidth
+                  variant="outlined"
+                  margin="dense"
+                  value={name}
+                  onChange={props.handleChange}
+                  onBlur={props.handleBlur}
+                  helperText={<ErrorMessage name="name" />}
+                  error={props.errors.name && props.touched.name}
+                  required
+                />
+                <TextField
+                  label="Inventory"
+                  name="inventory"
+                  fullWidth
+                  variant="outlined"
+                  margin="dense"
+                  value={inventory}
+                  onChange={props.handleChange}
+                  onBlur={props.handleBlur}
+                  helperText={<ErrorMessage name="inventory" />}
+                  error={props.errors.inventory && props.touched.inventory}
+                  required
+                />
 
-          <Formik
-            initialValues={initialValue}
-            validationSchema={foodValidation}
-            onSubmit={handleSubmit}
-          >
-            {(props) => {
-              const { name, inventory } = props.values;
-              return (
-                <Form>
-                  <TextField
-                    label="Name"
-                    name="name"
-                    fullWidth
-                    variant="outlined"
-                    margin="dense"
-                    value={name}
-                    onChange={props.handleChange}
-                    onBlur={props.handleBlur}
-                    helperText={<ErrorMessage name="name" />}
-                    error={props.errors.name && props.touched.name}
-                    required
-                  />
-                  <TextField
-                    label="Inventory"
-                    name="inventory"
-                    fullWidth
-                    variant="outlined"
-                    margin="dense"
-                    value={inventory}
-                    onChange={props.handleChange}
-                    onBlur={props.handleBlur}
-                    helperText={<ErrorMessage name="inventory" />}
-                    error={props.errors.inventory && props.touched.inventory}
-                    required
-                  />
+                <Button
+                  variant="contained"
+                  type="submit"
+                  fullWidth
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Submit
+                </Button>
 
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    fullWidth
-                    sx={{ mt: 3, mb: 2 }}
-                  >
-                    Submit
-                  </Button>
-
-                  <Grid item xs={12} sx={{ textAlign: "center", color: "red" }}>
-                    {formErrors ? (
-                      <span>
-                        {formErrors.map((e) => (
-                          <p className="mb-0">{e}</p>
-                        ))}
-                      </span>
-                    ) : (
-                      <span></span>
-                    )}
-                  </Grid>
-                </Form>
-              );
-              //   <Button
-              //     type="submit"
-              //     fullWidth
-              //     variant="contained"
-              //     sx={{ mt: 3, mb: 2 }}
-              //   >
-              //     Add
-              //   </Button>
-              // </Form>
-              // );
-            }}
-          </Formik>
-        </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
-    </ThemeProvider>
+                <Grid item xs={12} sx={{ textAlign: "center", color: "red" }}>
+                  {formErrors ? (
+                    <span>
+                      {formErrors.map((e) => (
+                        <p className="mb-0">{e}</p>
+                      ))}
+                    </span>
+                  ) : (
+                    <span></span>
+                  )}
+                </Grid>
+              </Form>
+            );
+          }}
+        </Formik>
+      </Box>
+    </Container>
   );
 }
 

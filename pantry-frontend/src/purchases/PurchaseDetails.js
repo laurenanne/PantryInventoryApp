@@ -7,7 +7,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import PurchaseItemCard from "../purchases/PurchaseItemCard";
 import { useHistory } from "react-router-dom";
 
-function PurchaseDetail() {
+function PurchaseDetail({ updateInv }) {
   const { purchaseId } = useParams();
   const [purchase, setPurchase] = useState(null);
   const history = useHistory();
@@ -23,20 +23,21 @@ function PurchaseDetail() {
     [purchaseId]
   );
 
-  // async function deletePurchase(evt) {
-  //   evt.preventDefault();
-  //   let res = await PantryApi.removePurchase(purchaseId);
-  //   console.log(res);
-  //   if (res) {
-  //   }
+  async function deletePurchase(evt) {
+    evt.preventDefault();
+    for (let i = 0; i < purchase.food.length; i++) {
+      let quantNum = parseInt(purchase.food[i].quantity);
+      let foodId = purchase.food[i].foodId;
+      if (quantNum) {
+        await updateInv(foodId, -Math.abs(quantNum));
+      }
+    }
 
-  //   // return to purchase page
-  //   history.push("/purchases");
-  // }
+    await PantryApi.removePurchase(purchaseId);
 
-  // async function editPurchase() {
-  //   return null;
-  // }
+    // return to purchase page
+    history.push("/purchases");
+  }
 
   if (!purchase)
     return (
@@ -58,16 +59,6 @@ function PurchaseDetail() {
           }}
         >
           <Box>
-            {/* <Typography align="right">
-              <span
-                onClick={editPurchase}
-                className="material-symbols-outlined"
-              >
-                edit
-              </span>
-            </Typography> */}
-          </Box>
-          {/* <Box>
             <Typography align="right">
               <span
                 onClick={deletePurchase}
@@ -76,7 +67,7 @@ function PurchaseDetail() {
                 delete
               </span>
             </Typography>
-          </Box> */}
+          </Box>
         </Box>
         <Box>
           <Box

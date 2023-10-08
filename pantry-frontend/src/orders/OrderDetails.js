@@ -7,7 +7,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import OrderItemCard from "./OrderItemCard";
 import { useHistory } from "react-router-dom";
 
-function OrderDetails() {
+function OrderDetails({ updateInv }) {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
   const history = useHistory();
@@ -23,18 +23,22 @@ function OrderDetails() {
     [orderId]
   );
 
-  // async function deleteOrder(evt) {
-  //   evt.preventDefault();
-  //   let res = await PantryApi.removeOrder(orderId);
+  async function deleteOrder(evt) {
+    evt.preventDefault();
+    for (let i = 0; i < order.food.length; i++) {
+      let quantNum = parseInt(order.food[i].quantity);
+      let foodId = order.food[i].foodId;
 
-  //   // return to order page
-  //   history.push("/orders");
-  // }
+      if (quantNum) {
+        await updateInv(foodId, quantNum);
+      }
+    }
 
-  // async function editOrder() {
+    await PantryApi.removeOrder(orderId);
 
-  //   return null;
-  // }
+    // return to order page
+    history.push("/orders");
+  }
 
   if (!order)
     return (
@@ -43,7 +47,6 @@ function OrderDetails() {
       </div>
     );
   else {
-    // let date = order.date.toString().slice(0, 10);
     return (
       <Box sx={{ margin: 2 }}>
         <Box
@@ -56,18 +59,11 @@ function OrderDetails() {
           }}
         >
           <Box>
-            {/* <Typography align="right">
-              <span onClick={editOrder} className="material-symbols-outlined">
-                edit
-              </span>
-            </Typography> */}
-          </Box>
-          <Box>
-            {/* <Typography align="right">
+            <Typography align="right">
               <span onClick={deleteOrder} className="material-symbols-outlined">
                 delete
               </span>
-            </Typography> */}
+            </Typography>
           </Box>
         </Box>
         <Box>
@@ -88,7 +84,11 @@ function OrderDetails() {
             Order Id: {orderId}
           </Typography>
 
-          <OrderItemCard food={order.food} />
+          <OrderItemCard
+            orderId={orderId}
+            updateInv={updateInv}
+            food={order.food}
+          />
         </Box>
       </Box>
     );

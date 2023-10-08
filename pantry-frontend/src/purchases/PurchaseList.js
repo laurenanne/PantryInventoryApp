@@ -4,24 +4,18 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Link } from "react-router-dom";
 import PantryApi from "../pantryApi";
 import CircularProgress from "@mui/material/CircularProgress";
-import { TextField, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useHistory } from "react-router-dom";
-import moment from "moment";
-import NewPurchaseForm from "./NewPurchaseForm";
+
 import PurchaseCard from "./PurchaseCard";
 
 function PurchaseList() {
   const [purchases, setPurchases] = useState(null);
   const history = useHistory();
-
-  // const iniitalState = { date: currentDate };
-
-  // const [formDate, setFormDate] = useState(currentDate);
 
   // upon loading, call API to get a list of all food
   useEffect(() => {
@@ -32,7 +26,6 @@ function PurchaseList() {
     getPurchases();
   }, []);
 
-  console.log(purchases);
   async function addPurchase() {
     history.push(`/purchases/new`);
   }

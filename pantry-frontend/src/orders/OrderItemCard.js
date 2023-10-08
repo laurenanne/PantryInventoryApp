@@ -27,7 +27,6 @@ function OrderItemCard({ food }) {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell align="right">Quantity</TableCell>
-              {/* <TableCell align="right">Total</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -37,6 +36,7 @@ function OrderItemCard({ food }) {
                 <TableCell align="right">{f.quantity}</TableCell>
               </TableRow>
             ))}
+
             <TableRow>
               <TableCell sx={{ fontWeight: "bold" }} align="right" colSpan={1}>
                 Subtotal

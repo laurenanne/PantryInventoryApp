@@ -16,8 +16,9 @@ import PurchaseList from "../purchases/PurchaseList";
 import NewPurchaseForm from "../purchases/NewPurchaseForm";
 import PurchaseDetails from "../purchases/PurchaseDetails";
 import ProtectedRoute from "./ProtectedRoutes";
+import EditUserForm from "../auth/EditUserForm";
 
-function Routes({ login, signup, food, updateInv, addNewFood }) {
+function Routes({ login, signup, food, updateInv, addNewFood, editUser }) {
   return (
     <div>
       <Switch>
@@ -29,9 +30,13 @@ function Routes({ login, signup, food, updateInv, addNewFood }) {
           <Dashboard food={food} />
         </ProtectedRoute>
 
-        <Route exact path="/signup">
+        <ProtectedRoute exact path="/signup">
           <SignupForm signup={signup} />
-        </Route>
+        </ProtectedRoute>
+
+        <ProtectedRoute exact path="/users/:username/edit">
+          <EditUserForm editUser={editUser} />
+        </ProtectedRoute>
 
         <ProtectedRoute exact path="/food">
           <FoodList food={food} />
@@ -70,7 +75,7 @@ function Routes({ login, signup, food, updateInv, addNewFood }) {
         </ProtectedRoute>
 
         <ProtectedRoute exact path="/orders/:orderId">
-          <OrderDetails />
+          <OrderDetails updateInv={updateInv} />
         </ProtectedRoute>
 
         <ProtectedRoute exact path="/purchases">
@@ -82,7 +87,7 @@ function Routes({ login, signup, food, updateInv, addNewFood }) {
         </ProtectedRoute>
 
         <ProtectedRoute exact path="/purchases/:purchaseId">
-          <PurchaseDetails />
+          <PurchaseDetails updateInv={updateInv} />
         </ProtectedRoute>
 
         <Redirect to="/" />

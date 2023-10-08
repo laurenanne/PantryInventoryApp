@@ -5,6 +5,9 @@ import NavBar from "./routes-nav/NavBar";
 import Routes from "./routes-nav/Routes";
 import PantryApi from "./pantryApi";
 import "./App.css";
+import { ThemeProvider } from "@mui/material/styles";
+import pantryTheme from "./pantryTheme";
+import CssBaseline from "@mui/material/CssBaseline";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -15,8 +18,6 @@ function App() {
 
   // upon loading call API to get the current user
   useEffect(() => {
-    console.debug("App useEffect loadUserInfo", "token=", token);
-
     async function getUser() {
       try {
         let user = await PantryApi.getCurrentUser(currentUser.username);
@@ -36,8 +37,6 @@ function App() {
     }
     getFood();
   }, [token, inventory, newFood]);
-
-  console.log(food);
 
   async function updateInv(foodId, quantNum) {
     try {
@@ -82,9 +81,20 @@ function App() {
   // function to handle new user signup
   async function signup(data) {
     try {
-      let token = await PantryApi.signup(data);
-      setCurrentUser({ username: data.username });
-      setToken(token);
+      await PantryApi.signup(data);
+
+      return { success: true };
+    } catch (err) {
+      return { success: false, err };
+    }
+  }
+
+  // function to handle new user signup
+  async function editUser(username, data) {
+    try {
+      let updatedUser = await PantryApi.editUser(username, data);
+      console.log(updatedUser);
+      setCurrentUser(updatedUser);
       return { success: true };
     } catch (err) {
       return { success: false, err };
@@ -92,20 +102,24 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <UserContext.Provider value={{ currentUser }}>
-        <div className="App">
-          {currentUser ? <NavBar logout={logout} /> : ""}
-          <Routes
-            updateInv={updateInv}
-            food={food}
-            addNewFood={addNewFood}
-            login={login}
-            signup={signup}
-          />
-        </div>
-      </UserContext.Provider>
-    </BrowserRouter>
+    <ThemeProvider theme={pantryTheme}>
+      <CssBaseline />
+      <BrowserRouter>
+        <UserContext.Provider value={{ currentUser }}>
+          <div className="App">
+            {currentUser ? <NavBar logout={logout} /> : ""}
+            <Routes
+              updateInv={updateInv}
+              food={food}
+              addNewFood={addNewFood}
+              login={login}
+              signup={signup}
+              editUser={editUser}
+            />
+          </div>
+        </UserContext.Provider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

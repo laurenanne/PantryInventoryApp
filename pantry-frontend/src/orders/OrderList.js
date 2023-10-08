@@ -4,12 +4,10 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Link } from "react-router-dom";
 import PantryApi from "../pantryApi";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import { useHistory } from "react-router-dom";
 import OrderCard from "./OrderCard";
 
 function OrderList() {

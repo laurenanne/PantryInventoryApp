@@ -6,7 +6,6 @@ class PantryApi {
   static token;
 
   static async request(endpoint, data = {}, method) {
-    console.log(PantryApi.token);
     const url = `${BASE_URL}/${endpoint}`;
 
     const headers = { Authorization: `Bearer ${PantryApi.token}` };
@@ -30,9 +29,17 @@ class PantryApi {
     return res.token;
   }
 
-  static async addFood(data) {
-    console.log(data);
+  static async signup(data) {
+    let res = await this.request("users/register", data, "post");
+    return res.body;
+  }
 
+  static async editUser(username, data) {
+    let res = await this.request(`users/${username}`, data, "patch");
+    return res.user;
+  }
+
+  static async addFood(data) {
     let res = await this.request("food", data, "post");
     return res.food;
   }
@@ -53,7 +60,6 @@ class PantryApi {
       clientId,
       "post"
     );
-    console.log(res);
     return res.order;
   }
 
@@ -181,6 +187,7 @@ class PantryApi {
   }
 
   static async removeOrderItem(orderId, foodId) {
+    console.log(orderId, foodId);
     let res = await this.request(
       `orders/${orderId}/food/${foodId}`,
       { Authorization: `Bearer ${PantryApi.token}` },

@@ -4,11 +4,10 @@ import Box from "@mui/material/Box";
 import "./purchases.css";
 import PantryApi from "../pantryApi";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as yup from "yup";
-import Grid from "@mui/material/Grid";
 
 function NewPurchaseItemForm({ foodId, name, purchaseId, updateInv }) {
   const [formErrors, setFormErrors] = useState(null);
@@ -20,15 +19,12 @@ function NewPurchaseItemForm({ foodId, name, purchaseId, updateInv }) {
     pricePerUnit: 0,
   };
 
-  const pantryTheme = createTheme();
-
   const purchaseValidation = yup.object().shape({
     quantity: yup.number(),
     pricePerUnit: yup.number().positive(),
   });
 
   function handleSubmit(values, props) {
-    console.log("here");
     !isAdded ? addItem(values, props) : removeItem(values, props);
   }
 
@@ -78,16 +74,9 @@ function NewPurchaseItemForm({ foodId, name, purchaseId, updateInv }) {
           alignItems: "center",
         }}
       >
-        <Box
-          sx={{
-            border: 1,
-            width: "100%",
-          }}
-        >
-          <Typography sx={{ textAlign: "center", bgcolor: "primary.main" }}>
-            {name}
-          </Typography>
-        </Box>
+        <Typography sx={{ textAlign: "center", color: "secondary.main" }}>
+          {name}
+        </Typography>
 
         <Formik
           initialValues={initialValue}
@@ -129,24 +118,24 @@ function NewPurchaseItemForm({ foodId, name, purchaseId, updateInv }) {
                 />
 
                 {!isAdded ? (
-                  <Button
-                    size="small"
-                    fullWidth
-                    type="submit"
-                    variant="outlined"
-                  >
+                  <Button fullWidth type="submit" variant="contained">
                     Add
                   </Button>
                 ) : (
-                  <Button
-                    size="small"
-                    fullWidth
-                    type="submit"
-                    variant="outlined"
-                  >
+                  <Button fullWidth type="submit" variant="contained">
                     Remove
                   </Button>
                 )}
+
+                <Grid item xs={12} sx={{ textAlign: "center", color: "red" }}>
+                  {formErrors ? (
+                    <span>
+                      <Typography>{formErrors}</Typography>
+                    </span>
+                  ) : (
+                    <span></span>
+                  )}
+                </Grid>
               </Form>
             );
           }}

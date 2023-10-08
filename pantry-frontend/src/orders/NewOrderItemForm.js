@@ -43,7 +43,6 @@ function NewOrderItemForm({
   });
 
   function handleSubmit(values, props) {
-    console.log("HERRRRRRE");
     !isAdded ? addItem(values, props) : removeOrderItem(values, props);
   }
 
@@ -56,6 +55,7 @@ function NewOrderItemForm({
       });
       setIsAdded(true);
       setCheckDisabled(true);
+      setDisabled(true);
       setTotal(total + quantNum);
 
       try {
@@ -75,6 +75,7 @@ function NewOrderItemForm({
       await PantryApi.removeOrderItem(orderId, foodId);
       setIsAdded(false);
       setCheckDisabled(false);
+      setDisabled(false);
       props.resetForm();
       setTotal(total - quantNum);
 
@@ -87,33 +88,6 @@ function NewOrderItemForm({
       setFormErrors(err);
     }
   }
-
-  // const handleChange = (evt) => {
-  //   setQuantity(evt.target.value);
-  // };
-
-  //   async function addItem(event) {
-  //     event.preventDefault();
-
-  // // within food array find food item where key in object = (foodId)
-  // for (let key in formData) {
-  //   if (formData[key]) {
-  //     const quantity = formData[key];
-  //     const item = food.find((f) => f.foodId === parseInt(key));
-
-  //     if (quantity > item.inventory) {
-  //       // ERROR MESSAGE HERE
-  //     } else {
-  //       const foodItem = await PantryApi.addOrderItems(order.orderId, key, {
-  //         quantity,
-  //       });
-
-  //       if (foodItem) {
-  //         history.push("/clients");
-  //       }
-  //     }
-  //   }
-  // }
 
   return (
     <React.Fragment>

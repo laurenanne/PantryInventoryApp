@@ -25,7 +25,6 @@ function ClientDetail() {
   // ability to search on id from the client card
   // record of number of clients that visited per day
   // CY client data
-  // const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     async function getClient() {
