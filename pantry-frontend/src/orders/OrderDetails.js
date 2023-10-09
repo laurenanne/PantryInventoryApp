@@ -30,14 +30,21 @@ function OrderDetails({ updateInv }) {
       let foodId = order.food[i].foodId;
 
       if (quantNum) {
-        await updateInv(foodId, quantNum);
+        try {
+          await updateInv(foodId, quantNum);
+        } catch (err) {
+          console.log(err);
+        }
       }
     }
 
-    await PantryApi.removeOrder(orderId);
-
-    // return to order page
-    history.push("/orders");
+    try {
+      await PantryApi.removeOrder(orderId);
+      // return to order page
+      history.push("/orders");
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   if (!order)

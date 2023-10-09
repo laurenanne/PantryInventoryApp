@@ -5,7 +5,10 @@ import TableCell from "@mui/material/TableCell";
 
 function PurchaseCard({ purchaseId, date }) {
   const history = useHistory();
-  date = date.toString().slice(0, 10);
+
+  if (date) {
+    date = date.toString().slice(0, 10);
+  }
 
   const handleRowClick = () => {
     history.push(`/purchases/${purchaseId}`);
