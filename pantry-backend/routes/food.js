@@ -54,7 +54,7 @@ router.get("/:foodId", ensureAdmin, async function (req, res, next) {
 
 // Updates the inventory number of a specific food item
 // Authorization required: admin
-router.patch("/:foodId", async function (req, res, next) {
+router.patch("/:foodId", ensureAdmin, async function (req, res, next) {
   try {
     const validator = jsonschema.validate(req.body, foodUpdateSchema);
     if (!validator.valid) {

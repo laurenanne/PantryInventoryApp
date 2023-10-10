@@ -7,6 +7,13 @@ import CircularProgress from "@mui/material/CircularProgress";
 import PurchaseItemCard from "../purchases/PurchaseItemCard";
 import { useHistory } from "react-router-dom";
 
+// Purchase Detail Page
+// Renders information about each purchase
+// Calls API to get purchase detail based on purchaseId, refreshes each time purchaseId is updated
+//Routed as /purchases/:purchaseId
+
+// Routes -> PurchaseItemCard
+
 function PurchaseDetail({ updateInv }) {
   const { purchaseId } = useParams();
   const [purchase, setPurchase] = useState(null);
@@ -28,6 +35,8 @@ function PurchaseDetail({ updateInv }) {
     for (let i = 0; i < purchase.food.length; i++) {
       let quantNum = parseInt(purchase.food[i].quantity);
       let foodId = purchase.food[i].foodId;
+
+      // since purchase is being deleted, for each food item in the purchase must update the food quantity in the inventory
       if (quantNum) {
         await updateInv(foodId, -Math.abs(quantNum));
       }

@@ -7,6 +7,13 @@ import CircularProgress from "@mui/material/CircularProgress";
 import OrderItemCard from "./OrderItemCard";
 import { useHistory } from "react-router-dom";
 
+// Order Detail Page
+// Renders information about each order
+// Calls API to get order detail based on orderID, refreshes each time orderID is updated
+//Routed as /orders/:orderId
+
+// Routes -> OrderItemCard
+
 function OrderDetails({ updateInv }) {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
@@ -25,10 +32,12 @@ function OrderDetails({ updateInv }) {
 
   async function deleteOrder(evt) {
     evt.preventDefault();
+
     for (let i = 0; i < order.food.length; i++) {
       let quantNum = parseInt(order.food[i].quantity);
       let foodId = order.food[i].foodId;
 
+      // must update the inventory in the food list if we're remomving the order
       if (quantNum) {
         try {
           await updateInv(foodId, quantNum);
@@ -38,6 +47,7 @@ function OrderDetails({ updateInv }) {
       }
     }
 
+    // removes orderId from order table
     try {
       await PantryApi.removeOrder(orderId);
       // return to order page

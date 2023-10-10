@@ -10,6 +10,13 @@ import { Formik, Form, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { Typography } from "@mui/material";
 
+// Is rendered by NewOrderForm
+// Renders a food form for each item: displays food name and quantity
+// calls API for each quantity/foodId selected and adds to exisiting orderId
+
+// Once added a delete button is displayed and item can be deleted
+// calls API for each quantity/foodId selected and deletes from exisiting orderId
+
 function NewOrderItemForm({
   foodId,
   name,

@@ -13,6 +13,8 @@ import Collapse from "@mui/material/Collapse";
 import { styled } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
 
+// Detailed information about the Client
+// Routes - > EditClientForm
 function ClientCard({ client }) {
   const history = useHistory();
   const [expanded, setExpanded] = useState(false);
@@ -35,10 +37,12 @@ function ClientCard({ client }) {
     setExpanded(!expanded);
   };
 
+  // On button click renders EditClientForm
   const editClient = () => {
     history.push(`/clients/${client.clientId}/edit`, { params: client });
   };
 
+  // On button click calls API to delete cient from client list
   async function deleteClient(evt) {
     evt.preventDefault();
     try {

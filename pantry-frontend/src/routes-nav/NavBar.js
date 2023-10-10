@@ -12,6 +12,8 @@ import { NavLink } from "react-router-dom";
 import { Avatar, Tooltip } from "@mui/material";
 import UserContext from "../auth/UserContext";
 
+// Rendered by App
+// When a user is logged in will show the Navigation Bar
 function NavBar({ logout }) {
   const { currentUser } = useContext(UserContext);
 

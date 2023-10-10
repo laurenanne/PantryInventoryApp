@@ -18,6 +18,9 @@ import PurchaseDetails from "../purchases/PurchaseDetails";
 import ProtectedRoute from "./ProtectedRoutes";
 import EditUserForm from "../auth/EditUserForm";
 
+// All of the routing for the site
+// Everything is protected except the login route
+// If trying to visit a route that doesn/t exist redirects to login
 function Routes({ login, signup, food, updateInv, addNewFood, editUser }) {
   return (
     <div>

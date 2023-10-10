@@ -6,6 +6,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Box from "@mui/material/Box";
 
+// renders from OrderDetails
+// displays table cells of food name and food quantity for each foodId in the order
+
 function OrderItemCard({ food }) {
   let quantityTotal = 0;
   for (let i = 0; i < food.length; i++) {

@@ -8,6 +8,8 @@ import Paper from "@mui/material/Paper";
 import FoodList from "../food/FoodList";
 import UserContext from "../auth/UserContext";
 
+// Routes as  "/home"
+// Displays a dashboard where you can see the low food inventory items
 function Dashboard({ food }) {
   const lowInv = food.filter((element) => element.inventory < 50);
 

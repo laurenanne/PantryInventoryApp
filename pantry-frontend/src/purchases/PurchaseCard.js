@@ -3,6 +3,9 @@ import { useHistory } from "react-router-dom";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 
+// renders from PurchaseList
+// displays table of purchaseId and date
+
 function PurchaseCard({ purchaseId, date }) {
   const history = useHistory();
 

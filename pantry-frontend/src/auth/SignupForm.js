@@ -11,6 +11,13 @@ import { useHistory } from "react-router-dom";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as yup from "yup";
 
+// Requires authorization
+// New User can be created by existing user who is Admin
+// Formik handles onChange and validation
+// Routed as /signup
+// Shows Signup form and calls signup function prop
+// On submission redirects to "/home" route
+
 function SignupForm({ signup }) {
   const initialValue = {
     username: "",
@@ -23,6 +30,7 @@ function SignupForm({ signup }) {
   const [formErrors, setFormErrors] = useState([]);
   const history = useHistory();
 
+  // Form validation schema for the form input
   const signupValidation = yup.object().shape({
     username: yup.string().required("Username is required"),
     password: yup.string().required("Enter Your Password"),
@@ -34,6 +42,8 @@ function SignupForm({ signup }) {
       .required("Enter Your Email"),
   });
 
+  // Handles form submission
+  // If success redirects to Dashboard on "/home" else displays error
   async function handleSubmit(values, props) {
     let resp = await signup(values);
     if (resp.success) {

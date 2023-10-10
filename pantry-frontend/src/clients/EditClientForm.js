@@ -13,6 +13,11 @@ import { useLocation } from "react-router-dom";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as yup from "yup";
 
+// Routed as /clients/:clientId/edit
+// Displays client edit form
+// Uses Formil to handle change and form validation
+// On submit makes call to API to edit client info
+
 function EditClientForm() {
   const location = useLocation();
   const client = location.state.params;
@@ -38,6 +43,7 @@ function EditClientForm() {
   const [formErrors, setFormErrors] = useState([]);
   const history = useHistory();
 
+  // client validation schema
   const clientValidation = yup.object().shape({
     address: yup.string(),
 
@@ -76,6 +82,8 @@ function EditClientForm() {
     lastVisit: yup.date(),
   });
 
+  // Handles form submission
+  // If successfult routes back to the client detail page
   async function handleSubmit(values, props) {
     try {
       await PantryApi.editClient(client.clientId, values);

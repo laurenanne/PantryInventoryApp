@@ -11,12 +11,17 @@ import { Formik, Form, ErrorMessage } from "formik";
 import * as yup from "yup";
 import Link from "@mui/material/Link";
 
+// Routed as "/"
+// Displays login form
+// Uses Formik to handle change and form validation
+// On submit calls login function prop and redirects to /home
 function LoginForm({ login }) {
   const initialValue = {
     username: "",
     password: "",
   };
 
+  // Used to validate form input
   const loginValidation = yup.object().shape({
     username: yup.string().required("Username is required"),
     password: yup.string().required("Enter Your Password"),
@@ -25,6 +30,8 @@ function LoginForm({ login }) {
   const [formErrors, setFormErrors] = useState(null);
   const history = useHistory();
 
+  // Handles form submit
+  // Calls login function. If success redirects to Dashboard "/home"
   async function handleSubmit(values, props) {
     let resp = await login(values);
     if (resp.success) {

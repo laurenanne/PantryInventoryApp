@@ -12,6 +12,12 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useHistory } from "react-router-dom";
 
+// Displays page with list of all clients
+// On mount loads from API
+// Re-loads filtered clients on submit of search form
+
+// Routed to "/clients"
+// Routes -> {ClientDetails, SearchForm, NewClientForm}
 function ClientList() {
   const [clients, setClients] = useState(null);
   const history = useHistory();
@@ -21,15 +27,18 @@ function ClientList() {
     search();
   }, []);
 
+  // Triggereed by searchForm submilt, reloads clients
   async function search(name) {
     let clients = await PantryApi.getClients(name);
     setClients(clients);
   }
 
+  // On row click routes to ClientDetail
   const handleRowClick = (c) => {
     history.push(`/clients/${c.clientId}`);
   };
 
+  // Triggered by button click. Loads new client creation form
   async function clientForm(event) {
     event.preventDefault();
     history.push("/clients/new");

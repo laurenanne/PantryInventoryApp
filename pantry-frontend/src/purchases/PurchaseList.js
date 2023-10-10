@@ -10,8 +10,13 @@ import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useHistory } from "react-router-dom";
-
 import PurchaseCard from "./PurchaseCard";
+
+// Displays a page with list of all purchases
+// On mount loads from API
+// Routed as "/purchases"
+
+// Routes to -> PurchaseCard
 
 function PurchaseList() {
   const [purchases, setPurchases] = useState(null);
@@ -26,6 +31,7 @@ function PurchaseList() {
     getPurchases();
   }, []);
 
+  // function to add new purchase to the list
   async function addPurchase() {
     history.push(`/purchases/new`);
   }

@@ -9,6 +9,13 @@ import Typography from "@mui/material/Typography";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as yup from "yup";
 
+// Is rendered by NewPurchaseForm
+// Renders a food form for each item: displays food name and quantity and pricePerUnit
+// calls API for each quantity/pricePerUnit/foodId selected and adds to exisiting purchaseId
+
+// Once added a delete button is displayed and item can be deleted
+// calls API for each quantity/pricePerUnit/foodId selected and deletes from exisiting purchaseId
+
 function NewPurchaseItemForm({ foodId, name, purchaseId, updateInv }) {
   const [formErrors, setFormErrors] = useState(null);
   const [disabled, setDisabled] = useState(false);
@@ -36,6 +43,7 @@ function NewPurchaseItemForm({ foodId, name, purchaseId, updateInv }) {
       setDisabled(true);
       setIsAdded(true);
 
+      // if item successfully added must update the inventory for the food
       try {
         await updateInv(foodId, quantNum);
       } catch (err) {
@@ -53,6 +61,8 @@ function NewPurchaseItemForm({ foodId, name, purchaseId, updateInv }) {
       setIsAdded(false);
       setDisabled(false);
       props.resetForm();
+
+      // if item successfully removed must update the inventory for the quantity that has been deleted
 
       try {
         await updateInv(foodId, -Math.abs(quantNum));

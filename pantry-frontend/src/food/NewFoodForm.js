@@ -10,6 +10,10 @@ import { Formik, Form, ErrorMessage } from "formik";
 import * as yup from "yup";
 import Grid from "@mui/material/Grid";
 
+// Routed as "/food/new"
+// Displays form to create new food item
+
+// On form submit calls addNewFood function and redirects to /food
 function NewFoodForm({ addNewFood }) {
   const initialValue = {
     name: "",

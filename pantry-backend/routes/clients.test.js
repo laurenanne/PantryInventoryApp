@@ -249,7 +249,18 @@ describe("GET /clients/:id", function () {
         isHispanic: "Prefer not to say",
         createDate: "2023-09-18T04:00:00.000Z",
         lastVisit: null,
-        orders: [expect.any(Number), expect.any(Number)],
+        orders: [
+          {
+            clientId: testClientIds[0],
+            date: expect.any(String),
+            orderId: testOrderIds[0],
+          },
+          {
+            clientId: testClientIds[0],
+            date: expect.any(String),
+            orderId: testOrderIds[1],
+          },
+        ],
       },
     });
   });

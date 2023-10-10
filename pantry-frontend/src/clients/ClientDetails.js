@@ -15,6 +15,11 @@ import { TableBody } from "@mui/material";
 import ClientCard from "./ClientCard";
 import moment from "moment";
 
+// Client Detail page
+// Renders information about each client, along with their order history
+// Routed at /clients/:clientId
+
+// Routes -> {ClientCard, OrderCard, NewOrderForm}
 function ClientDetail() {
   const { clientId } = useParams();
   const history = useHistory();
@@ -22,10 +27,7 @@ function ClientDetail() {
   const date = moment();
   const currDate = date.format("YYYY-MM-DD");
 
-  // ability to search on id from the client card
-  // record of number of clients that visited per day
-  // CY client data
-
+  // On mount loads Client Detail from API
   useEffect(() => {
     async function getClient() {
       setClient(await PantryApi.getClient(clientId));
@@ -33,6 +35,9 @@ function ClientDetail() {
     getClient();
   }, [clientId]);
 
+  // On Button click creates a new order number for the client
+  // And updates the lastVisit date for the client
+  // Routes to the NewOrder Form
   async function newOrder() {
     let order = await PantryApi.addOrder(clientId);
     if (order) {

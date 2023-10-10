@@ -7,6 +7,12 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import NewOrderItemForm from "./NewOrderItemForm";
 
+// Routed as /clients/:clientId/orders/:orderId/new
+// Displays a food order form
+
+// routes -> NewOrderItemForm
+
+// On button click checks that items less 12 and redirects to /clients/:clientId
 function NewOrderForm(props) {
   const { clientId } = useParams();
   const { orderId } = useParams();

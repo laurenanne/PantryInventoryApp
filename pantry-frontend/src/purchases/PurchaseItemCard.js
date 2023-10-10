@@ -7,6 +7,9 @@ import TableRow from "@mui/material/TableRow";
 import Box from "@mui/material/Box";
 import "./purchases.css";
 
+// renders from PurchaseDetails
+// displays table cells of food name and food quantity and food price per unit for each foodId in the purchase
+
 function PurchaseItemCard({ food }) {
   let quantityTotal = 0;
   let valTotal = 0;

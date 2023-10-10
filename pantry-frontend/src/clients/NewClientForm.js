@@ -12,6 +12,10 @@ import moment from "moment";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as yup from "yup";
 
+// Routed as "/clients/new"
+// Displays a client creation form for the admin user to enter
+// Uses FOrmik to handle changes and form validation
+// On submit calls API to add client
 function NewClientForm() {
   let date = moment();
   let currentDate = date.format("YYYY-MM-DD");
@@ -36,6 +40,7 @@ function NewClientForm() {
 
   const phoneNumberRegEx = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;
 
+  // Client validation schema
   const clientValidation = yup.object().shape({
     firstName: yup
       .string("Enter a valid first name")
@@ -88,6 +93,7 @@ function NewClientForm() {
   const [formErrors, setFormErrors] = useState([]);
   const history = useHistory();
 
+  // Handles form submit. If Valid redirects back to client page
   async function handleSubmit(values, props) {
     try {
       await PantryApi.addClient(values);

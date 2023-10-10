@@ -10,10 +10,14 @@ import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
+// Displays page with all food items
+// Routed as  "/food"
+// Routes -> NewFoodForm
 function FoodList(props) {
   const history = useHistory();
   const food = props.food;
 
+  // On button click renders NewFoodForm
   async function foodForm(event) {
     event.preventDefault();
     history.push("/food/new");

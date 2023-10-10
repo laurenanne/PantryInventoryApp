@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
+// sets the palette to be used for the web theme
 const pantryTheme = createTheme({
   palette: {
     primary: {

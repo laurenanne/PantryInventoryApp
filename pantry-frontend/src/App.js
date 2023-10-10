@@ -10,6 +10,7 @@ import pantryTheme from "./pantryTheme";
 import CssBaseline from "@mui/material/CssBaseline";
 
 function App() {
+  // sets and maintains state for user, food, token
   const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useState("");
   const [food, setFood] = useState([]);
@@ -29,7 +30,9 @@ function App() {
     getUser();
   }, [token]);
 
-  // upon loading, call API to get a list of all food
+  // upon loading, call API to get a list of all food.
+  // Since auth is required it will not fill food list until signin. Will reload once token is acquired and will refresh if inventory is updated or new food added
+  //
   useEffect(() => {
     async function getFood() {
       let food = await PantryApi.getFood();
@@ -38,6 +41,7 @@ function App() {
     getFood();
   }, [token, inventory, newFood]);
 
+  // adds or removes inventory amount
   async function updateInv(foodId, quantNum) {
     try {
       let update = await PantryApi.updateInv(foodId, quantNum);
@@ -48,6 +52,7 @@ function App() {
     }
   }
 
+  // adds a new food item to the food list
   async function addNewFood(data) {
     try {
       let food = await PantryApi.addFood(data);
@@ -58,7 +63,7 @@ function App() {
     }
   }
 
-  // function to handle login and set and save token to local storage
+  // function to handle login and sets current uer and token
   async function login(data) {
     try {
       let token = await PantryApi.login(data);
@@ -72,7 +77,7 @@ function App() {
     }
   }
 
-  // function to handle user logout. Clear token from storage
+  // function to handle user logout. Clear token and current user
   function logout() {
     setToken("");
     setCurrentUser(null);
@@ -89,11 +94,10 @@ function App() {
     }
   }
 
-  // function to handle new user signup
+  // function to handle editing user information
   async function editUser(username, data) {
     try {
       let updatedUser = await PantryApi.editUser(username, data);
-      console.log(updatedUser);
       setCurrentUser(updatedUser);
       return { success: true };
     } catch (err) {

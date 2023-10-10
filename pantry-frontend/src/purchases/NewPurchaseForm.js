@@ -10,6 +10,12 @@ import NewPurchaseItemForm from "./NewPurchaseItemForm";
 import moment from "moment";
 import PantryApi from "../pantryApi";
 
+// Routed as /purchases/new
+// Displays a purchase order form
+
+// routes -> NewPurchaseItemForm
+
+// On button click checks that items less 12 and redirects to /clients/:clientId
 function NewPurchaseForm(props) {
   const food = props.food;
   const updateInv = props.updateInv;
@@ -26,6 +32,7 @@ function NewPurchaseForm(props) {
     setFormDate(evt.target.value);
   };
 
+  // Calls API to create a new purchase. If successfully shows the form to add food items
   async function addPurchase() {
     let purchase = await PantryApi.addPurchase({ date: formDate });
 

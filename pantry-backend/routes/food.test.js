@@ -166,7 +166,7 @@ describe("PATCH /food/:id", () => {
 
   test("unauth for anon", async function () {
     const resp = await request(app).patch(`/food/${testFoodIds[0]}`).send({
-      quantity: 13,
+      inventory: 13,
     });
     expect(resp.statusCode).toEqual(401);
   });

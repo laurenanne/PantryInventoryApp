@@ -10,6 +10,12 @@ import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import OrderCard from "./OrderCard";
 
+// Displays a page with list of all orders
+// On mount loads from API
+// Routed as "/orders"
+
+// Routes to -> OrderCard
+
 function OrderList() {
   const [orders, setOrders] = useState([]);
 
