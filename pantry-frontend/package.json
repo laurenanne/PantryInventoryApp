@@ -12,7 +12,6 @@
     "@mui/styled-engine-sc": "^5.14.10",
     "@testing-library/jest-dom": "github:testing-library/jest-dom",
     "axios": "^1.5.0",
-    "dotenv": "^16.3.1",
     "formik": "^2.4.5",
     "formik-mui": "^5.0.0-alpha.0",
     "jsonwebtoken": "^9.0.2",
@@ -27,9 +26,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts --openssl-legacy-provider build && mv build/index.html build/200.html && surge ./build/ stp-pantry.surge.sh",
+    "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!axios)/\"",
     "eject": "react-scripts eject",
+    "deploy": "npm run --openssl-legacy-provider build && mv build/index.html build/200.html && surge ./build/ stp-pantry.surge.sh",
     "homepage": "https://github.com/laurenanne/PantryInventoryApp/pantry-frontend"
   },
   "eslintConfig": {
@@ -43,6 +43,7 @@
   ],
   "devDependencies": {
     "@testing-library/react": "^12.1.5",
+    "dotenv": "^16.3.1",
     "jest-dom": "^4.0.0"
   }
 }
