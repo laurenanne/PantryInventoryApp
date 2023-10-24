@@ -13,6 +13,8 @@ function getDatabaseUri() {
     : process.env.DATABASE_URI || "pantry";
 }
 
+console.log(getDatabaseUri());
+
 const BCRYPT_WORK_FACTOR = process.env.NODE_ENV === "test" ? 1 : 12;
 
 console.log("Pantry App Config:".green);
