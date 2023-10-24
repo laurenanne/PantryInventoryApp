@@ -29,7 +29,7 @@
     "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!axios)/\"",
     "eject": "react-scripts eject",
-    "deploy": "npm run --openssl-legacy-provider build && mv build/index.html build/200.html && surge ./build/ stp-pantry.surge.sh",
+    "deploy": "npm run --openssl-legacy-provider build && mv build/index.html build/200.html && surge ./build/ stp-pantry.surge.sh"
     
   },
   "eslintConfig": {
