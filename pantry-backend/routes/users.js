@@ -17,7 +17,6 @@ const router = express.Router();
 
 // login route for a user; if the username password matches creates and returns a token
 router.post("/login", async function (req, res, next) {
-  console.log(req, res);
   try {
     const validator = jsonschema.validate(req.body, userAuthSchema);
     if (!validator.valid) {
