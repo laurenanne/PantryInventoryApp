@@ -26,7 +26,9 @@ class PantryApi {
 
   // validate a user sign In, returns a token
   static async login(data) {
+    console.log(data);
     let res = await this.request("users/login", data, "post");
+    console.log(res);
     return res.token;
   }
 
