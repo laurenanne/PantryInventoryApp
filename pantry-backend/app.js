@@ -17,8 +17,8 @@ const foodRoutes = require("./routes/food");
 const morgan = require("morgan");
 
 const app = express();
-
-app.use(cors());
+const options = { origin: "*" };
+app.use(cors(options));
 app.use(express.json());
 app.use(morgan("tiny"));
 app.use(authenticateJWT);
