@@ -17,7 +17,7 @@ const foodRoutes = require("./routes/food");
 const morgan = require("morgan");
 
 const app = express();
-const options = { origin: "*" };
+const options = { origin: "https://stp-pantry.surge.sh" };
 app.use(cors(options));
 app.use(express.json());
 app.use(morgan("tiny"));
