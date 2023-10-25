@@ -29,9 +29,9 @@ function Routes({ login, signup, food, updateInv, addNewFood, editUser }) {
           <LoginForm login={login} />
         </Route>
 
-        <Route exact path="/home">
+        <ProtectedRoute exact path="/home">
           <Dashboard food={food} />
-        </Route>
+        </ProtectedRoute>
 
         <ProtectedRoute exact path="/signup">
           <SignupForm signup={signup} />

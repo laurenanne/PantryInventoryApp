@@ -32,7 +32,7 @@ router.post("/", ensureAdmin, async function (req, res, next) {
 
 // Gets all of the food in the database
 //  Authorization required: admin
-router.get("/", async function (req, res, next) {
+router.get("/", ensureAdmin, async function (req, res, next) {
   try {
     const food = await Food.getAll();
     return res.json({ food });
