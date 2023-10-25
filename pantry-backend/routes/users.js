@@ -29,6 +29,7 @@ router.post("/login", async function (req, res, next) {
     const token = createToken(user);
     return res.json({ token });
   } catch (err) {
+    console.log("/users/login:: error in login method: ", err);
     return next(err);
   }
 });
