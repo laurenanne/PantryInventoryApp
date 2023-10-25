@@ -10,7 +10,7 @@ const PORT = +process.env.PORT || 3001;
 function getDatabaseUri() {
   return process.env.NODE_ENV === "test"
     ? "pantry_test"
-    : process.env.DATABASE_URI || "pantry";
+    : process.env.DATABASE_URL || "pantry";
 }
 
 const BCRYPT_WORK_FACTOR = process.env.NODE_ENV === "test" ? 1 : 12;
