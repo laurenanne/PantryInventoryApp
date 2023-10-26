@@ -8,7 +8,6 @@ function ProtectedRoute({ exact, path, children }) {
   const { currentUser } = useContext(UserContext);
 
   if (!currentUser) {
-    console.log(currentUser);
     return <Redirect to="/login" />;
   }
 
