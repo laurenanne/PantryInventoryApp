@@ -14,8 +14,6 @@ const purchasesRoutes = require("./routes/purchases");
 const clientsRoutes = require("./routes/clients");
 const foodRoutes = require("./routes/food");
 
-const morgan = require("morgan");
-
 const app = express();
 const options = {
   origin: [
@@ -27,7 +25,6 @@ const options = {
 };
 app.use(cors(options));
 app.use(express.json());
-app.use(morgan("tiny"));
 app.use(authenticateJWT);
 
 app.use("/users", usersRoutes);

@@ -1,5 +1,8 @@
 # Title: Pantry Inventory App
 
+## Link to site: 
+(https://stp-pantry.surge.sh)
+
 ## Description:
 The goal of this app is to assist the local food pantry to track inventory of food staples. Pantry admins can search for current clients based on last name and create new clients to be added to the pantry database. Once a client is found the user can enter the client “order” based on a set menu of food items. Pantry admins can also update the inventory by creating new purchase orders where they enter food quantities and price. This app will eliminate the use of multiple spreadsheets to track inventory, client demographics, and allow for better planning. 
  
