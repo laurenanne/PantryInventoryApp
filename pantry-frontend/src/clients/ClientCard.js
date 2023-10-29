@@ -147,7 +147,7 @@ function ClientCard({ client }) {
                   <Typography variant="body2">Creation Date: </Typography>
                 )}
 
-                {client.lastVisitDate ? (
+                {client.lastVisit ? (
                   <Typography variant="body2">
                     Last Visit Date: {client.lastVisit.toString().slice(0, 10)}
                   </Typography>

@@ -77,6 +77,7 @@ function NewClientForm() {
     race: yup
       .string()
       .oneOf([
+        "White",
         "American Indian or Alaska Native",
         "Asian",
         "Native Hawaiian or Other Pacific Islander",

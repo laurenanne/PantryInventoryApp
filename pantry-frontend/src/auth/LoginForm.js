@@ -35,7 +35,6 @@ function LoginForm({ login }) {
   async function handleSubmit(values, props) {
     let resp = await login(values);
     if (resp.success) {
-      props.resetForm();
       history.push("/home");
     } else {
       setFormErrors("Incorrect username/password");
