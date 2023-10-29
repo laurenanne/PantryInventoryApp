@@ -35,8 +35,12 @@ function App() {
   //
   useEffect(() => {
     async function getFood() {
-      let food = await PantryApi.getFood();
-      setFood(food);
+      try {
+        let food = await PantryApi.getFood();
+        setFood(food);
+      } catch (err) {
+        setFood([]);
+      }
     }
     getFood();
   }, [token, inventory, newFood]);

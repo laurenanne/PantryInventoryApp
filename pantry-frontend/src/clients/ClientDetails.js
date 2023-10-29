@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PantryApi from "../pantryApi";
-import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import OrderCard from "../orders/OrderCard";
@@ -14,6 +13,7 @@ import { useHistory } from "react-router-dom";
 import { TableBody } from "@mui/material";
 import ClientCard from "./ClientCard";
 import moment from "moment";
+import Spinner from "../utilities/Spinner";
 
 // Client Detail page
 // Renders information about each client, along with their order history
@@ -30,7 +30,11 @@ function ClientDetail() {
   // On mount loads Client Detail from API
   useEffect(() => {
     async function getClient() {
-      setClient(await PantryApi.getClient(clientId));
+      try {
+        setClient(await PantryApi.getClient(clientId));
+      } catch (err) {
+        setClient(null);
+      }
     }
     getClient();
   }, [clientId]);
@@ -51,58 +55,51 @@ function ClientDetail() {
     }
   }
 
-  if (!client) {
-    return (
-      <div>
-        <CircularProgress color="secondary" />;
-      </div>
-    );
-  } else {
-    return (
-      <React.Fragment>
-        <ClientCard client={client} />
+  if (!client) return <Spinner />;
+  return (
+    <React.Fragment>
+      <ClientCard client={client} />
 
-        <Box sx={{ mr: 3, ml: 3, mt: 3 }}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              mb: 3,
-              // flexDirection: "row",
-            }}
-          >
-            <Box sx={{ ml: 1, mb: 0 }}>
-              <Typography variant="contained">History</Typography>
-            </Box>
-            <Box sx={{ ml: 2 }}>
-              <Button onClick={newOrder} variant="contained">
-                New Order
-              </Button>
-            </Box>
+      <Box sx={{ mr: 3, ml: 3, mt: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            mb: 3,
+            // flexDirection: "row",
+          }}
+        >
+          <Box sx={{ ml: 1, mb: 0 }}>
+            <Typography variant="contained">History</Typography>
           </Box>
-
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Order Id</TableCell>
-                <TableCell>Date</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {client.orders.map((co) => (
-                <OrderCard
-                  key={co.orderId}
-                  orderId={co.orderId}
-                  clientId={co.clientId}
-                  date={co.date}
-                />
-              ))}
-            </TableBody>
-          </Table>
+          <Box sx={{ ml: 2 }}>
+            <Button onClick={newOrder} variant="contained">
+              New Order
+            </Button>
+          </Box>
         </Box>
-      </React.Fragment>
-    );
-  }
+
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Order Id</TableCell>
+              <TableCell>Date</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {client.orders.map((co) => (
+              <OrderCard
+                key={co.orderId}
+                orderId={co.orderId}
+                clientId={co.clientId}
+                date={co.date}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
+    </React.Fragment>
+  );
 }
 
 export default ClientDetail;

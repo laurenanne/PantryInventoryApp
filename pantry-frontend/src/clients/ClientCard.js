@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import PantryApi from "../pantryApi";
-import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
@@ -12,6 +11,8 @@ import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import { styled } from "@mui/material/styles";
 import { useHistory } from "react-router-dom";
+import formatDate from "../utilities/formatDate";
+import Spinner from "../utilities/Spinner";
 
 // Detailed information about the Client
 // Routes - > EditClientForm
@@ -53,114 +54,105 @@ function ClientCard({ client }) {
     }
   }
 
-  if (!client) {
-    return (
-      <div>
-        <CircularProgress color="secondary" />;
-      </div>
-    );
-  } else {
-    return (
-      <React.Fragment>
-        <Box sx={{ mr: 3, ml: 3, mt: 3 }}>
-          <Card
-            variant="outlined"
-            sx={{
-              boxShadow: 4,
-              borderBottomColor: "secondary.main",
-              bgcolor: "#fff",
-              borderRadius: 2,
+  if (!client) return <Spinner />;
+  return (
+    <React.Fragment>
+      <Box sx={{ mr: 3, ml: 3, mt: 3 }}>
+        <Card
+          variant="outlined"
+          sx={{
+            boxShadow: 4,
+            borderBottomColor: "secondary.main",
+            bgcolor: "#fff",
+            borderRadius: 2,
+          }}
+        >
+          <CardHeader
+            subheaderTypographyProps={{
+              gutterBottom: true,
+              color: "secondary.dark",
             }}
-          >
-            <CardHeader
-              subheaderTypographyProps={{
-                gutterBottom: true,
-                color: "secondary.dark",
-              }}
-              sx={{ color: "secondary.dark" }}
-              avatar={
-                <Avatar
-                  sx={{ m: 1, bgcolor: "secondary.main" }}
-                  aria-label="lastName"
-                >
-                  {client.lastName[0]}
-                </Avatar>
-              }
-              action={
-                <Box>
-                  <IconButton onClick={editClient} aria-label="settings">
-                    <span className="material-symbols-outlined">edit</span>
-                  </IconButton>
-                  <IconButton onClick={deleteClient} aria-label="settings">
-                    <span className="material-symbols-outlined">delete</span>
-                  </IconButton>
-                </Box>
-              }
-              title={`${client.firstName} ${client.lastName}`}
-              subheader={`${client.altFirstName} ${client.altLastName}`}
-            />
-
-            <CardActions disableSpacing>
-              <ExpandMore
-                expand={expanded}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-                aria-label="show more"
+            sx={{ color: "secondary.dark" }}
+            avatar={
+              <Avatar
+                sx={{ m: 1, bgcolor: "secondary.main" }}
+                aria-label="lastName"
               >
-                <span className="material-symbols-outlined">expand_more</span>
-              </ExpandMore>
-            </CardActions>
+                {client.lastName[0]}
+              </Avatar>
+            }
+            action={
+              <Box>
+                <IconButton onClick={editClient} aria-label="settings">
+                  <span className="material-symbols-outlined">edit</span>
+                </IconButton>
+                <IconButton onClick={deleteClient} aria-label="settings">
+                  <span className="material-symbols-outlined">delete</span>
+                </IconButton>
+              </Box>
+            }
+            title={`${client.firstName} ${client.lastName}`}
+            subheader={`${client.altFirstName} ${client.altLastName}`}
+          />
 
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <CardContent>
-                <Typography variant="body2">Phone: {client.phone}</Typography>
-                <Typography variant="body2">
-                  Alternate Phone: {client.altPhone}
-                </Typography>
-                <Typography variant="body2">
-                  Address: {client.address}
-                </Typography>
-                <Typography variant="body2">
-                  Number of Adults in the Family: {client.numberAdultsInFamily}
-                </Typography>
-                <Typography variant="body2">
-                  Number of Kids in the Family: {client.numberKidsInFamily}
-                </Typography>
-                <Typography variant="body2">
-                  Receive Benefits?: {client.receiveBenefits}
-                </Typography>
+          <CardActions disableSpacing>
+            <ExpandMore
+              expand={expanded}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
+              <span className="material-symbols-outlined">expand_more</span>
+            </ExpandMore>
+          </CardActions>
 
-                <Typography variant="body2">
-                  Is Client Elgible?:
-                  {client.isEligible ? "Yes" : " No"}
-                </Typography>
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+              <Typography variant="body2">Phone: {client.phone}</Typography>
+              <Typography variant="body2">
+                Alternate Phone: {client.altPhone}
+              </Typography>
+              <Typography variant="body2">Address: {client.address}</Typography>
+              <Typography variant="body2">
+                Number of Adults in the Family: {client.numberAdultsInFamily}
+              </Typography>
+              <Typography variant="body2">
+                Number of Kids in the Family: {client.numberKidsInFamily}
+              </Typography>
+              <Typography variant="body2">
+                Receive Benefits?: {client.receiveBenefits}
+              </Typography>
 
-                <Typography variant="body2">Race: {client.race}</Typography>
-                <Typography variant="body2">
-                  Is Hispanic: {client.isHispanic}
-                </Typography>
-                {client.createDate ? (
-                  <Typography variant="body2">
-                    Creation Date: {client.createDate.toString().slice(0, 10)}
-                  </Typography>
-                ) : (
-                  <Typography variant="body2">Creation Date: </Typography>
-                )}
+              <Typography variant="body2">
+                Is Client Elgible?:
+                {client.isEligible ? "Yes" : " No"}
+              </Typography>
 
-                {client.lastVisit ? (
-                  <Typography variant="body2">
-                    Last Visit Date: {client.lastVisit.toString().slice(0, 10)}
-                  </Typography>
-                ) : (
-                  <Typography variant="body2">Last Visit Date:</Typography>
-                )}
-              </CardContent>
-            </Collapse>
-          </Card>
-        </Box>
-      </React.Fragment>
-    );
-  }
+              <Typography variant="body2">Race: {client.race}</Typography>
+              <Typography variant="body2">
+                Is Hispanic: {client.isHispanic}
+              </Typography>
+              {client.createDate ? (
+                <Typography variant="body2">
+                  Creation Date: {formatDate(client.createDate)}
+                </Typography>
+              ) : (
+                <Typography variant="body2">Creation Date: </Typography>
+              )}
+
+              {client.lastVisit ? (
+                <Typography variant="body2">
+                  Last Visit Date: {formatDate(client.lastVisit)}
+                </Typography>
+              ) : (
+                <Typography variant="body2">Last Visit Date:</Typography>
+              )}
+            </CardContent>
+          </Collapse>
+        </Card>
+      </Box>
+    </React.Fragment>
+  );
 }
 
 export default ClientCard;
